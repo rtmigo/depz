@@ -44,24 +44,22 @@ import unittest, os
 from pathlib import Path
 
 
-def unlinkAll(parent:Path):
+def unlinkAll(parent: Path):
 	# removes all symlinks that are immediate children of parent dir
 	for child in parent.glob("*"):
 		if child.is_symlink():
 			child.unlink()
 
 
-def isFlutterDir(path:Path) -> bool:
-
-	return (path/"pubspec.yaml").exists()
-
-
-def isPipenvDir(path:Path):
-	return (path/"Pipfile").exists()
+def isFlutterDir(path: Path) -> bool:
+	return (path / "pubspec.yaml").exists()
 
 
-def resolvePath(rootDir:Path, packageDir:str) -> Optional[Path]:
+def isPipenvDir(path: Path):
+	return (path / "Pipfile").exists()
 
+
+def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:
 	# если packageDir задает относительный путь - он будет отмеряться от rootDir
 	# если packageDir задает вообще не путь - вернется None
 
@@ -76,23 +74,21 @@ def resolvePath(rootDir:Path, packageDir:str) -> Optional[Path]:
 		packageDirPath = rootDir / packageDir
 	packageDirPath = packageDirPath.resolve()
 
-	#packageDirPath = Path(packageDir)
+	# packageDirPath = Path(packageDir)
 
-	if packageDirPath.exists() and packageDirPath.is_dir(): #(packageDirPath/"__init__.py").exists():
+	if packageDirPath.exists() and packageDirPath.is_dir():  # (packageDirPath/"__init__.py").exists():
 		return packageDirPath
 
 
-def findLocalLib(libsDir:Path, libName:str):
-
+def findLocalLib(libsDir: Path, libName: str):
 	for srcDir in libsDir.glob("*"):
-		if srcDir.is_dir() and srcDir.name==libName or srcDir.name==libName+"_py":
+		if srcDir.is_dir() and srcDir.name == libName or srcDir.name == libName + "_py":
 			return srcDir
 
 	raise FileNotFoundError(f"Cannot find local library named '{libName}'")
 
 
-def pathToLibname(path:Path) -> str:
-
+def pathToLibname(path: Path) -> str:
 	n = path.name
 	if n.endswith("_py"):
 		n = n[:-3]
@@ -101,15 +97,18 @@ def pathToLibname(path:Path) -> str:
 
 	return n
 
-def _debugIterParents(p:Path) -> Iterator[Path]:
+
+def _debugIterParents(p: Path) -> Iterator[Path]:
 	"""Returns /path/to/parent/file, /path/to/parent, /path/to, /path, /"""
 	parts = list(p.parts)
-	for l in range(len(parts),0, -1):
+	for l in range(len(parts), 0, -1):
 		yield Path(*parts[:l])
 
 
-def symlinkVerbose(realPath:Path, linkPath:Path, targetIsDirectory:bool, ifRealExists=False):
-	# because i don't Path.symlink_to understand error message...
+def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool, ifRealExists=False):
+	# Path.symlink_to can throw a FileNotFound error without making it clear whether it is link
+	# source or link target
+
 	if not realPath.exists():
 		if ifRealExists:
 			return
@@ -123,43 +122,41 @@ def symlinkVerbose(realPath:Path, linkPath:Path, targetIsDirectory:bool, ifRealE
 	linkPath.symlink_to(realPath, target_is_directory=targetIsDirectory)
 
 
-
-def symlinkPython(srcLibDir:Path, dstPythonpathDir:Path):
-
+def symlinkPython(srcLibDir: Path, dstPythonpathDir: Path):
 	# создает в каталоге dstPythonpathDir ссылку на библиотеку, расположенную в srcLibDir
 
 	name = pathToLibname(srcLibDir)
-	#symlinkVerbose()
+	# symlinkVerbose()
 	symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
-	#(dstPythonpathDir / name).symlink_to(srcLibDir, target_is_directory=True)
+	# (dstPythonpathDir / name).symlink_to(srcLibDir, target_is_directory=True)
 	print(f'Created symlink "{name}" -> "{srcLibDir}"')
 
 
-def symlinkFlutter(srcLibDir:Path, dstProjectDir:Path):
-
-	# создает в каталоге dstProjectDir ссылку на библиотеку, расположенную в srcLibDir
+def symlinkFlutter(srcLibDir: Path, dstProjectDir: Path):
+	"""Creates symlinks from items inside srcLibDir to items inside dstProjectDir"""
 
 	name = pathToLibname(srcLibDir)
 
-	symlinkVerbose((srcLibDir/"lib").absolute(), dstProjectDir / "lib" / name, targetIsDirectory=True)
-	symlinkVerbose((srcLibDir/"test").absolute(), dstProjectDir / "test" / name, targetIsDirectory=True, ifRealExists=True)
+	symlinkVerbose((srcLibDir / "lib").absolute(), dstProjectDir / "lib" / name,
+				   targetIsDirectory=True)
+	symlinkVerbose((srcLibDir / "test").absolute(), dstProjectDir / "test" / name,
+				   targetIsDirectory=True, ifRealExists=True)
 
-	#(dstProjectDir / "lib" / name ).symlink_to((srcLibDir/"lib").absolute(), target_is_directory=True)
-	#(dstProjectDir / "test" / name ).symlink_to((srcLibDir/"test").absolute(), target_is_directory=True)
+
+# (dstProjectDir / "lib" / name ).symlink_to((srcLibDir/"lib").absolute(), target_is_directory=True)
+# (dstProjectDir / "test" / name ).symlink_to((srcLibDir/"test").absolute(), target_is_directory=True)
 
 
-def pydpnFiles(dirPath:Path) -> Iterable[Path]:
-
+def pydpnFiles(dirPath: Path) -> Iterable[Path]:
 	for p in [
-		dirPath/"pydpn.txt",
-		dirPath/"lib"/"pydpn.txt"
+		dirPath / "pydpn.txt",
+		dirPath / "lib" / "pydpn.txt"
 	]:
 		if p.exists():
 			yield p
 
 
-def rescan(projectDir:Path, relink:bool) -> Dict[str, Set[str]]:
-
+def rescan(projectDir: Path, relink: bool) -> Dict[str, Set[str]]:
 	# сканирует файл pydpn.txt в каталоге проекта, а также, следуя по ссылкам на другие локальные
 	# библиотеки - все файлы pydpn.txt в тех библиотеках.
 	#
@@ -168,18 +165,16 @@ def rescan(projectDir:Path, relink:bool) -> Dict[str, Set[str]]:
 	#
 	# А имена внешних библиотек просто возвращает списокои
 
-
-	localLibs:Set[Path] = set()
+	localLibs: Set[Path] = set()
 	externalLibs = defaultdict(set)
-
 
 	# читаю все pydpn, запоминая результаты, но ничего не меняя
 
-	pathsToAnalyze:Deque[Path] = deque((projectDir.absolute(),))
+	pathsToAnalyze: Deque[Path] = deque((projectDir.absolute(),))
 
 	while pathsToAnalyze:
 
-		currDir = pathsToAnalyze.popleft() # каталог проекта или библиотеки
+		currDir = pathsToAnalyze.popleft()  # каталог проекта или библиотеки
 
 		for pydpnFile in pydpnFiles(currDir):
 
@@ -209,12 +204,12 @@ def rescan(projectDir:Path, relink:bool) -> Dict[str, Set[str]]:
 
 		# пересоздаю симлинки (удаляю все, создаю актуальные)
 
-		pkgsDir = projectDir# /PKGSBN
+		pkgsDir = projectDir  # /PKGSBN
 		pkgsDir.mkdir(exist_ok=True)
 		unlinkAll(pkgsDir)
 		if isFlutterDir(pkgsDir):
-			unlinkAll(pkgsDir/"lib")
-			unlinkAll(pkgsDir/"test")
+			unlinkAll(pkgsDir / "lib")
+			unlinkAll(pkgsDir / "test")
 
 		isFlutter = isFlutterDir(projectDir)
 
@@ -223,45 +218,41 @@ def rescan(projectDir:Path, relink:bool) -> Dict[str, Set[str]]:
 				symlinkFlutter(path, pkgsDir)
 			else:
 				symlinkPython(path, pkgsDir)
-			# name = pathToLibname(path)
-			# (pkgsDir/name).symlink_to(path, target_is_directory=True)
-			# print(f'Linked "{name}" from "{path}"')
+	# name = pathToLibname(path)
+	# (pkgsDir/name).symlink_to(path, target_is_directory=True)
+	# print(f'Linked "{name}" from "{path}"')
 
-		# возвращаю то, что не было ссылками на локальные проекты: т.е. внешние зависимости
+	# возвращаю то, что не было ссылками на локальные проекты: т.е. внешние зависимости
 
 	return externalLibs
 
 
 class Test(unittest.TestCase):
 
-
 	@property
 	def testDir(self) -> Path:
 
-		d = Path(__file__).parent/"testData"
+		d = Path(__file__).parent / "testData"
 		self.assertTrue(d.exists())
 		return d
-
 
 	@property
 	def testPythonDir(self) -> Path:
 
-		return self.testDir/"python"
-
+		return self.testDir / "python"
 
 	@property
 	def testFlutterDir(self) -> Path:
 
-		return self.testDir/"flutter"
-
+		return self.testDir / "flutter"
 
 	def testUnlink(self):
 
-		tempSubdir = (self.testPythonDir/"iLikeToBeLinkedTo").absolute()
+		tempSubdir = (self.testPythonDir / "iLikeToBeLinkedTo").absolute()
 		tempSubdir.mkdir(exist_ok=True)
 
-		link1 = (self.testDir/"link1").absolute()
-		link2 = (self.testDir/"link2").absolute()
+		link1 = (self.testDir / "link1").absolute()
+		link2 = (self.testDir / "link2").absolute()
 
 		if not link1.exists():
 			link1.symlink_to(tempSubdir, True)
@@ -278,7 +269,6 @@ class Test(unittest.TestCase):
 		self.assertFalse(link2.exists())
 
 		os.rmdir(str(tempSubdir))
-
 
 	def testRelinkPython(self):
 
@@ -298,25 +288,24 @@ class Test(unittest.TestCase):
 
 		self.assertEqual(externals, {'numpy': {'proj'}, 'requests': {'lib1'}})
 
-
 	def testRelinkFlutter(self):
 
-		self.assertTrue(isFlutterDir(self.testFlutterDir/"project"))
-		self.assertFalse(isFlutterDir(self.testFlutterDir)) # парадокс :)
+		self.assertTrue(isFlutterDir(self.testFlutterDir / "project"))
+		self.assertFalse(isFlutterDir(self.testFlutterDir))  # парадокс :)
 
-		projectDir = self.testFlutterDir/"project"
+		projectDir = self.testFlutterDir / "project"
 
 		expectedFiles = [
-			projectDir/"lib"/"libraryA"/"code1.dart",
-			projectDir/"lib"/"libraryA"/"code2.dart",
-			projectDir/"lib"/"libraryB"/"code3.dart",
-			projectDir/"lib"/"libraryC"/"something.dart",
-			projectDir/"test"/"libraryA"/"testA.dart",
-			projectDir/"test"/"libraryB"/"testB.dart",
+			projectDir / "lib" / "libraryA" / "code1.dart",
+			projectDir / "lib" / "libraryA" / "code2.dart",
+			projectDir / "lib" / "libraryB" / "code3.dart",
+			projectDir / "lib" / "libraryC" / "something.dart",
+			projectDir / "test" / "libraryA" / "testA.dart",
+			projectDir / "test" / "libraryB" / "testB.dart",
 		]
 
-		unlinkAll(projectDir/"lib")
-		unlinkAll(projectDir/"test")
+		unlinkAll(projectDir / "lib")
+		unlinkAll(projectDir / "test")
 
 		self.assertTrue(all(not path.exists() for path in expectedFiles))
 
@@ -326,18 +315,17 @@ class Test(unittest.TestCase):
 			print(path)
 			self.assertTrue(path.exists())
 
-		#print("ext", externals)
+		# print("ext", externals)
 
 		self.assertEqual(externals, {'externalLib': {'project'}, 'externalFromC': {'libraryB'}})
 
 
-def pipInstallCommand(libs:Dict[str, Set[str]]) -> Optional[str]:
-
-	if len(libs)<=0:
+def pipInstallCommand(libs: Dict[str, Set[str]]) -> Optional[str]:
+	if len(libs) <= 0:
 		print("No external dependences.")
 		return None
 
-	return "pip install "+" ".join(libs)
+	return "pip install " + " ".join(libs)
 
 
 class Mode(IntEnum):
@@ -345,11 +333,11 @@ class Mode(IntEnum):
 	flutter = auto()
 
 
-def doo(installExternalDeps:bool=False, updateReqsFile:bool=False, symlinkLocalDeps:bool=False):
-
+def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
+		symlinkLocalDeps: bool = False):
 	projectPath = Path(".")
 
-	mode:Mode = Mode.python
+	mode: Mode = Mode.python
 	if isFlutterDir(projectPath):
 		mode = Mode.flutter
 
@@ -361,8 +349,8 @@ def doo(installExternalDeps:bool=False, updateReqsFile:bool=False, symlinkLocalD
 		return
 
 	if updateReqsFile:
-		if mode==Mode.python:
-			(projectPath/"requirements.txt").write_text("\n".join(externalLibs))
+		if mode == Mode.python:
+			(projectPath / "requirements.txt").write_text("\n".join(externalLibs))
 			print(f"requirements.txt updated ({len(externalLibs)} lines)")
 			print("To install external dependencies, run:")
 			print("  pip -r requirements.txt")
@@ -370,7 +358,7 @@ def doo(installExternalDeps:bool=False, updateReqsFile:bool=False, symlinkLocalD
 			raise ValueError
 
 	if installExternalDeps:
-		if mode==Mode.python:
+		if mode == Mode.python:
 			cmd = pipInstallCommand(externalLibs)
 			print(f"Running [{cmd}]")
 			os.system(cmd)
@@ -380,27 +368,31 @@ def doo(installExternalDeps:bool=False, updateReqsFile:bool=False, symlinkLocalD
 	# not creating a file, not installing => printing
 
 	if not updateReqsFile and not installExternalDeps:
-		if mode==Mode.python:
+		if mode == Mode.python:
 			cmd = pipInstallCommand(externalLibs)
 			if cmd:
 				print("To install external dependencies, run:")
 				print("  " + pipInstallCommand(externalLibs))
-		elif mode==Mode.flutter:
+		elif mode == Mode.flutter:
 			for libName, referreringPydpns in externalLibs.items():
 				print(f"{libName}: any # referred from {', '.join(referreringPydpns)}")
 		else:
 			raise ValueError
 
-def runmain():
 
+def runmain():
 	import argparse
 
 	parser = argparse.ArgumentParser(usage=helptxt)
 
-	parser.add_argument("-d", "--default", action="store_true", help="shorthand for --relink --install")
-	parser.add_argument("--relink", action="store_true", help="remove all symlinks from the project dir and create symlinks to local dependences")
-	parser.add_argument("--install", action="store_true", help="install external dependences (run 'pip')")
-	parser.add_argument("--reqs", action="store_true", help="write external dependences into requirements.txt")
+	parser.add_argument("-d", "--default", action="store_true",
+						help="shorthand for --relink --install")
+	parser.add_argument("--relink", action="store_true",
+						help="remove all symlinks from the project dir and create symlinks to local dependences")
+	parser.add_argument("--install", action="store_true",
+						help="install external dependences (run 'pip')")
+	parser.add_argument("--reqs", action="store_true",
+						help="write external dependences into requirements.txt")
 
 	args = parser.parse_args()
 
@@ -408,7 +400,6 @@ def runmain():
 		installExternalDeps=args.install or args.default,
 		symlinkLocalDeps=args.relink or args.default)
 
+
 if __name__ == "__main__":
-
 	runmain()
-
