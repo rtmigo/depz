@@ -30,6 +30,7 @@ and `mylib` while working on `myproject`.
 - `/abc/myproject/deps.txt` lists dependencies for `myproject`
 - `/abc/libs/mylib/deps.txt` lists dependencies for `mylib`
 
+The `deps.txt` format:
 ```sh
 
 # lines prefixed by hashes are ignored
