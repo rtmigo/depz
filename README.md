@@ -59,6 +59,6 @@ External dependences are installed with tools like pip.
 
 Exact behavior is specified by the program arguments.
 
-| Current dir | Scanned lnkdpn.txt  |
-|--------------------|------------|
-| /pathto/project | /pathto/project/lnkdpn.txt |
+| Scanned lnkdpn.txt  | Found line | Makes a link of |
+|--------------------|------------|---------------|
+| `/pathto/project/lnkdpn.txt` | `../libs/mylib1` | 
