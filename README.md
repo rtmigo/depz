@@ -38,7 +38,7 @@ such as `/abc/proj/lnkdpn.txt`:
 # lines that specify local directory 
 # names are LOCAL dependencies:
   
-/abs/path/mylib1
+/absolute/path/to/mylib1
 ../mylib2
 ~/path/mylib3
 
