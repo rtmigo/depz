@@ -27,7 +27,10 @@ and `mylib` while working on `myproject`.
 
 Each line of "lnkdpn.txt" specifies a dependency.
 
-## Format of lnkdpn.txt
+## Specifying depencences
+
+To to specify the project dependencies, create a file named `lnkdpn.txt` in the project root, 
+such as `/abc/proj/lnkdpn.txt`:
 
 ```sh
 # lines prefixed by hashes are ignored
