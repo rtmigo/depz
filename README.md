@@ -22,5 +22,5 @@ and `mylib` while working on `myproject`.
 
 **lnkdpn** automates the creation of such symbolic links, solving emerging problems:
 
-- Portability. To make the symlinks easy to recreate on another system
-- Dependencies. If the `mylib` depends on other libraries, they will be included as well
+- **Portability**. To make the symlinks easy to recreate on another system
+- **Dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
