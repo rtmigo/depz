@@ -8,7 +8,7 @@ Command line tool for managing local project dependencies in Python and Flutter.
 # Motivation
 
 Developing **reusable libraries** should be simple. If I have working code in a **nearby directory**, 
-I just want to **include it**. Skipping the hassle of packaging the directory as a library for distribution.
+I just want to **include it**. Skipping the hassle of packaging the reusable code as a library for distribution.
 
 So I will probably just do:
 
