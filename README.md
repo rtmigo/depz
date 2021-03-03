@@ -44,11 +44,13 @@ Each line of "lnkdpn.txt" specifies a dependency.
 
 requests
 ```
-## Local dependencies are recursive
+#### Local dependencies are recursive
 
 When the project depends on local `mylib`, it means, it also depends on all 
 the dependences of `mylib`. So after scannig `project/lnkdpn.txt` we will also 
 scan `mylib/lnkdpn.txt` the same way.
+
+#### Paths are relative
 
 Paths are relative to the dir containing the current `lnkdpn.txt`. But resulting 
 links will always reside in the project dir. For example, when calling `lnkdpn` in `/abc/proj`:
