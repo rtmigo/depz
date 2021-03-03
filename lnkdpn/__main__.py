@@ -102,7 +102,7 @@ def pathToLibname(path:Path) -> str:
 	return n
 
 def symlinkVerbose(realPath:Path, linkPath:Path, targetIsDirectory:bool, ifRealExists=False):
-	# because i don't understand error message...
+	# because i don't Path.symlink_to understand error message...
 	if not realPath.exists():
 		if ifRealExists:
 			return
