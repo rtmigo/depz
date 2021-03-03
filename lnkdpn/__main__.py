@@ -106,6 +106,13 @@ def symlinkVerbose(realPath:Path, linkPath:Path, targetIsDirectory:bool, ifRealE
 	if not realPath.exists():
 		if ifRealExists:
 			return
+
+		# fixme
+		p = realPath
+		while p is not None:
+			print(p, p.exists())
+			p = p.parent
+
 		raise FileNotFoundError(f"realPath path {realPath} does not exist")
 	if not linkPath.parent.exists():
 		raise FileNotFoundError(f"The parent dir of destination linkPath {linkPath} does not exist")
