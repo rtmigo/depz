@@ -30,9 +30,10 @@ Each line of "lnkdpn.txt" specifies a dependency.
 ## lnkdpn.txt specifies depencences
 
 Create a file named `lnkdpn.txt` in the project root, 
-such as `/abc/proj/lnkdpn.txt`:
+for example, `/abc/proj/lnkdpn.txt`:
 
 ```sh
+
 # lines prefixed by hashes are ignored
 
 # lines that specify local directory 
