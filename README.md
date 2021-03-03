@@ -14,7 +14,7 @@ for distribution or messing with IDE settings.
 So I will probably just do:
 
 ```bash
-$ ln -s libs/mylib projects/myproject/mylib
+$ ln -s /abc/libs/mylib /abc/myproject/mylib
 ```
 
 Now `myproject` sees `mylib` as a local directory `myproject/mylib`. I can edit both `myproject` 
@@ -30,7 +30,7 @@ Each line of "lnkdpn.txt" specifies a dependency.
 ## lnkdpn.txt specifies depencences
 
 Create a file named `lnkdpn.txt` in the project root, 
-for example, `/abc/proj/lnkdpn.txt`:
+for example, `/abc/myproject/lnkdpn.txt`:
 
 ```sh
 
@@ -40,7 +40,7 @@ for example, `/abc/proj/lnkdpn.txt`:
 # names are LOCAL dependencies:
   
 /absolute/path/to/mylib1
-../mylib2
+../libs/mylib2
 ~/path/mylib3
 
 # the following line will be considered an EXTERNAL 
@@ -50,8 +50,8 @@ requests
 ```
 ### Local dependencies are recursive
 
-When the project depends on local `mylib`, it means, it also depends on all 
-the dependences of `mylib`. So after scannig `project/lnkdpn.txt` we will also 
+When a project depends on local `mylib`, it means, it also depends on all 
+the dependences of `mylib`. So after scannig `myproject/lnkdpn.txt` we will also 
 scan `mylib/lnkdpn.txt` the same way.
 
 ### Paths are relative to lnkdpn.txt
