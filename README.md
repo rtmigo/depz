@@ -25,12 +25,17 @@ and `mylib` while working on `myproject`.
 - **Portability**. To make the symlinks easy to recreate on another system
 - **Dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
 
-# How to specify dependecies
+# Usage
 
-## File `xxx/deps.txt` specifies dependencies for `xxx`
+- Specify dependecies in `deps.txt`
+- Run the command `deps`
 
-- `/abc/myproject/deps.txt` lists dependencies for `myproject`
-- `/abc/libs/mylib/deps.txt` lists dependencies for `mylib`
+# Specify dependecies
+
+## File `xxx/deps.txt` lists dependencies for `xxx`
+
+- `/abc/myproject/deps.txt` for `myproject`
+- `/abc/libs/mylib/deps.txt` for `mylib`
 
 The `deps.txt` format:
 ```sh
@@ -67,7 +72,7 @@ links will always reside in the project dir. For example, when running in `/abc/
 |/abc/myproject/lnkdpn.txt|../libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
 |/abc/libs/xxx/lnkdpn.txt|../zzz|/abc/libs/zzz|/abc/myproject/zzz|
  
-# How to run
+# Run
 
 ```bash
 $ cd /abc/myproject
