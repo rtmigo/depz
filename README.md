@@ -2,6 +2,9 @@
 
 [![Generic badge](https://img.shields.io/badge/ready_for_use-no-red.svg)](#)
 [![Actions Status](https://github.com/rtmigo/depz/workflows/CI/badge.svg?branch=master)](https://github.com/rtmigo/depz/actions)
+[![Generic badge](https://img.shields.io/badge/CI_OS-MacOS,_Ubuntu-blue.svg)](#)
+[![Generic badge](https://img.shields.io/badge/CI_Python-3.8,_3.9-blue.svg)](#)
+
 
 Command line tool for symlinking dirs with reusable code into the working project.
 
