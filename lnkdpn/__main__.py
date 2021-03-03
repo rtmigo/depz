@@ -254,19 +254,21 @@ class Test(unittest.TestCase):
 
 	def testRelinkPython(self):
 
-		libSearchDir = self.testPythonDir/"libs"
-		projDir = self.testPythonDir/"proj"
-		libLinksDir = projDir #self.testDir/"proj"/PKGSBN
+		libSearchDir = self.testPythonDir / "libs"
+		projDir = self.testPythonDir / "proj"
+		libLinksDir = projDir  # self.testDir/"proj"/PKGSBN
 
 		unlinkAll(libLinksDir)
 
-		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')}, {"stub.py","pydpn.txt"})
+		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
+						 {"stub.py", "pydpn.txt"})
 
 		externals = rescan(projDir, relink=True)
 
-		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')}, {"stub.py", "pydpn.txt", 'lib3', 'lib2', 'lib1'})
+		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
+						 {"stub.py", "pydpn.txt", 'lib3', 'lib2', 'lib1'})
 
-		self.assertEqual(externals, {'requests', 'numpy'})
+		self.assertEqual(externals, {'numpy': {'proj'}, 'requests': {'lib1'}})
 
 
 	def testRelinkFlutter(self):
@@ -296,7 +298,9 @@ class Test(unittest.TestCase):
 			print(path)
 			self.assertTrue(path.exists())
 
-		self.assertEqual(externals, {'externalLib', 'externalFromC'})
+		#print("ext", externals)
+
+		self.assertEqual(externals, {'externalLib': {'project'}, 'externalFromC': {'libraryB'}})
 
 
 def pipInstallCommand(libs:Dict[str, Set[str]]) -> Optional[str]:
