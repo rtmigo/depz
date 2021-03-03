@@ -80,9 +80,21 @@ def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:
 		return packageDirPath
 
 
+def isDirMatchesLib(dirPath:Path, libName:str) -> bool:
+	return dirPath.name == libName or dirPath.name == libName + "_py" or dirPath.name == libName + "_lib"
+
+class TestDirnameMatch(unittest.TestCase):
+	def test(self):
+		self.assertEqual(isDirMatchesLib(Path("/path/to/module"), "module"), True)
+		self.assertEqual(isDirMatchesLib(Path("/path/to/module_py"), "module"), True)
+		self.assertEqual(isDirMatchesLib(Path("/path/to/module_lib"), "module"), True)
+		self.assertEqual(isDirMatchesLib(Path("/path/to/module/sub"), "module"), False)
+		self.assertEqual(isDirMatchesLib(Path("/path/to/labuda"), "module"), False)
+
+
 def findLocalLib(libsDir: Path, libName: str):
 	for srcDir in libsDir.glob("*"):
-		if srcDir.is_dir() and srcDir.name == libName or srcDir.name == libName + "_py":
+		if srcDir.is_dir() and isDirMatchesLib(srcDir, libName):
 			return srcDir
 
 	raise FileNotFoundError(f"Cannot find local library named '{libName}'")
@@ -149,8 +161,10 @@ def symlinkFlutter(srcLibDir: Path, dstProjectDir: Path):
 
 def pydpnFiles(dirPath: Path) -> Iterable[Path]:
 	for p in [
-		dirPath / "pydpn.txt",
-		dirPath / "lib" / "pydpn.txt"
+		dirPath / "lnkdpn.txt",
+		dirPath / "lib" / "lnkdpn.txt",
+		dirPath / "pydpn.txt", # deprecated since 2021-03
+		dirPath / "lib" / "pydpn.txt"  # deprecated since 2021-03
 	]:
 		if p.exists():
 			yield p
@@ -230,29 +244,27 @@ def rescan(projectDir: Path, relink: bool) -> Dict[str, Set[str]]:
 class Test(unittest.TestCase):
 
 	@property
-	def testDir(self) -> Path:
-
-		d = Path(__file__).parent / "testData"
-		self.assertTrue(d.exists())
+	def dataDir(self) -> Path:
+		d = Path(__file__).parent / "test" / "data"
+		if not d.exists():
+			raise FileNotFoundError(d)
 		return d
 
 	@property
-	def testPythonDir(self) -> Path:
-
-		return self.testDir / "python"
+	def dataPythonDir(self) -> Path:
+		return self.dataDir / "python"
 
 	@property
-	def testFlutterDir(self) -> Path:
-
-		return self.testDir / "flutter"
+	def dataFlutterDir(self) -> Path:
+		return self.dataDir / "flutter"
 
 	def testUnlink(self):
 
-		tempSubdir = (self.testPythonDir / "iLikeToBeLinkedTo").absolute()
+		tempSubdir = (self.dataPythonDir / "iLikeToBeLinkedTo").absolute()
 		tempSubdir.mkdir(exist_ok=True)
 
-		link1 = (self.testDir / "link1").absolute()
-		link2 = (self.testDir / "link2").absolute()
+		link1 = (self.dataDir / "link1").absolute()
+		link2 = (self.dataDir / "link2").absolute()
 
 		if not link1.exists():
 			link1.symlink_to(tempSubdir, True)
@@ -263,7 +275,7 @@ class Test(unittest.TestCase):
 		self.assertTrue(link1.exists() and link1.is_symlink())
 		self.assertTrue(link2.exists() and link2.is_symlink())
 
-		unlinkAll(self.testDir)
+		unlinkAll(self.dataDir)
 
 		self.assertFalse(link1.exists())
 		self.assertFalse(link2.exists())
@@ -272,28 +284,28 @@ class Test(unittest.TestCase):
 
 	def testRelinkPython(self):
 
-		libSearchDir = self.testPythonDir / "libs"
-		projDir = self.testPythonDir / "proj"
+		libSearchDir = self.dataPythonDir / "libs"
+		projDir = self.dataPythonDir / "proj"
 		libLinksDir = projDir  # self.testDir/"proj"/PKGSBN
 
 		unlinkAll(libLinksDir)
 
 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
-						 {"stub.py", "pydpn.txt"})
+						 {"stub.py", "lnkdpn.txt"})
 
 		externals = rescan(projDir, relink=True)
 
 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
-						 {"stub.py", "pydpn.txt", 'lib3', 'lib2', 'lib1'})
+						 {"stub.py", "lnkdpn.txt", 'lib3', 'lib2', 'lib1'})
 
 		self.assertEqual(externals, {'numpy': {'proj'}, 'requests': {'lib1'}})
 
 	def testRelinkFlutter(self):
 
-		self.assertTrue(isFlutterDir(self.testFlutterDir / "project"))
-		self.assertFalse(isFlutterDir(self.testFlutterDir))  # парадокс :)
+		self.assertTrue(isFlutterDir(self.dataFlutterDir / "project"))
+		self.assertFalse(isFlutterDir(self.dataFlutterDir))  # парадокс :)
 
-		projectDir = self.testFlutterDir / "project"
+		projectDir = self.dataFlutterDir / "project"
 
 		expectedFiles = [
 			projectDir / "lib" / "libraryA" / "code1.dart",
