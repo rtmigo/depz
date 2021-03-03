@@ -51,7 +51,7 @@ the dependences of `mylib`. So after scannig `project/lnkdpn.txt` we will also
 scan `mylib/lnkdpn.txt` the same way.
 
 Paths are relative to the dir containing the current `lnkdpn.txt`. But resulting 
-links will always reside in the project dir.
+links will always reside in the project dir. For example, when calling `lnkdpn` inside `/abc/proj`:
 
 | Source  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
