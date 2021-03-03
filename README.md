@@ -57,8 +57,8 @@ numpy
 ### Local dependencies are recursive
 
 When a project depends on local `mylib`, it means, it also depends on all 
-the dependences of `mylib`. So after scannig `myproject/lnkdpn.txt` we will also 
-scan `mylib/lnkdpn.txt` the same way.
+the dependences of `mylib`. So after scannig `myproject/depz.txt` we will also 
+scan `mylib/depz.txt` the same way.
 
 ### Paths are relative to parent of depz.txt
 
@@ -67,9 +67,9 @@ links will always reside in the project dir. For example, when running in `/abc/
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
-|/abc/myproject/lnkdpn.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
-|/abc/myproject/lnkdpn.txt|../libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
-|/abc/libs/xxx/lnkdpn.txt|../zzz|/abc/libs/zzz|/abc/myproject/zzz|
+|/abc/myproject/depz.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
+|/abc/myproject/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
+|/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/myproject/zzz|
  
 # Run
 

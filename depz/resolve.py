@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Optional
 
 def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:
-	"""Gives interpretation to a single line of lnkdpn.txt.
+	"""Gives interpretation to a single line of depz.txt.
 
-	:param rootDir: The directory where lnkdpn.txt found.
+	:param rootDir: The directory where depz.txt found.
 	:param packageDir: Either relative to the rootDir or absolute.
 	:return: The path to the library directory. NULL, if directory does not exist
 	or does not contain a library.

@@ -1,8 +1,8 @@
 # SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-from lnkdpn.resolve import resolvePath
-from lnkdpn.x00_common import Mode
+from depz.resolve import resolvePath
+from depz.x00_common import Mode
 
 
 
@@ -88,8 +88,8 @@ def symlinkFlutter(srcLibDir: Path, dstProjectDir: Path):
 
 def pydpnFiles(dirPath: Path) -> Iterable[Path]:
 	for p in [
-		dirPath / "lnkdpn.txt",
-		dirPath / "lib" / "lnkdpn.txt",
+		dirPath / "depz.txt",
+		dirPath / "lib" / "depz.txt",
 		dirPath / "pydpn.txt",  # deprecated since 2021-03
 		dirPath / "lib" / "pydpn.txt"  # deprecated since 2021-03
 	]:
@@ -106,7 +106,7 @@ def iterLnkdpnLines(file: Path) -> Iterator[str]:
 
 
 def rescan(projectDir: Path, relink: bool) -> Dict[str, Set[str]]:
-	# сканирует файл lnkdpn.txt в каталоге проекта, а также, следуя по ссылкам на другие локальные
+	# сканирует файл depz.txt в каталоге проекта, а также, следуя по ссылкам на другие локальные
 	# библиотеки - все файлы pydpn.txt в тех библиотеках.
 	#
 	# В итоге на локальные библиотеки делает симлинки в каталоге project/pkgs (заменяя все
@@ -222,12 +222,12 @@ class Test(unittest.TestCase):
 		unlinkAll(libLinksDir)
 
 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
-						 {"stub.py", "lnkdpn.txt"})
+						 {"stub.py", "depz.txt"})
 
 		externals = rescan(projDir, relink=True)
 
 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
-						 {"stub.py", "lnkdpn.txt", 'lib3', 'lib2', 'lib1'})
+						 {"stub.py", "depz.txt", 'lib3', 'lib2', 'lib1'})
 
 		self.assertEqual(externals, {'numpy': {'proj'}, 'requests': {'lib1'}})
 

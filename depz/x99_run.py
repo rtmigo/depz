@@ -1,19 +1,19 @@
 # SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-from lnkdpn.inter import doo
+from depz.inter import doo
 
 
 helptxt = """
 
-LNKDPN is a simple dependency management utility. It allows to keep 
+DEPZ is a simple dependency management utility. It allows to keep 
 reusable code in local directories. Without packaging it as a library 
 for distribution. 
 
 The dependences of the project must be specified in text file 
-named "lnkdpn.txt" in the project root dir.
+named "depz.txt" in the project root dir.
 
-Each line of "lnkdpn.txt" specifies a dependency.
+Each line of "depz.txt" specifies a dependency.
 
 Sample lines:
 
@@ -26,8 +26,8 @@ Sample lines:
     The project depends on some EXTERNAL package called "requests"
 
 When the project depends on local `mylib`, it means, it also depends on all 
-the dependences of `mylib`. So after scannig "project/lnkdpn.txt" we will also 
-scan "mylib/lnkdpn.txt" the same way.
+the dependences of `mylib`. So after scannig "project/depz.txt" we will also 
+scan "mylib/depz.txt" the same way.
 
 Local dependences are usually linked or copied into the project dir. 
 For example, "/path/to/mylib" will lead to creation of symlink "./mylib".
