@@ -32,8 +32,7 @@ and `mylib` while working on `myproject`.
 
 # Specify dependecies
 
-## File `xxx/deps.txt` lists dependencies for `xxx`
-
+File `xxx/deps.txt` lists dependencies for `xxx`:
 - `/abc/myproject/deps.txt` for `myproject`
 - `/abc/libs/mylib/deps.txt` for `mylib`
 
