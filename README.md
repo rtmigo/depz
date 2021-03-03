@@ -3,15 +3,15 @@
 [![Generic badge](https://img.shields.io/badge/ready_for_use-no-red.svg)](#)
 [![Actions Status](https://github.com/rtmigo/depz/workflows/CI/badge.svg?branch=master)](https://github.com/rtmigo/depz/actions)
 
-Command line tool for managing local project dependencies in Python and Flutter.
+Command line tool for symlinking dirs with reusable code into the working project.
 
 # Motivation
 
-**Reusing code** should be simple. If I have working code in a **nearby directory**, 
+**Reusing code** should be simple. If I have the needed code in a **nearby directory**, 
 I just want to **include it** into the project. Without packaging it as a library 
 for distribution or messing with IDE settings.
 
-So I will probably just do:
+So I will probably just **create a symlink**:
 
 ```bash
 $ ln -s /abc/libs/mylib /abc/myproject/mylib
