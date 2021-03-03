@@ -1,7 +1,7 @@
 # [depz](https://github.com/rtmigo/depz)
 
 [![Generic badge](https://img.shields.io/badge/ready_for_use-no-red.svg)](#)
-[![Actions Status](https://github.com/rtmigo/lnkdpn/workflows/CI/badge.svg?branch=master)](https://github.com/rtmigo/lnkdpn/actions)
+[![Actions Status](https://github.com/rtmigo/depz/workflows/CI/badge.svg?branch=master)](https://github.com/rtmigo/depz/actions)
 
 Command line tool for managing local project dependencies in Python and Flutter.
 
