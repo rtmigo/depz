@@ -24,3 +24,41 @@ and `mylib` while working on `myproject`.
 
 - **Portability**. To make the symlinks easy to recreate on another system
 - **Dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
+
+Each line of "lnkdpn.txt" specifies a dependency.
+
+## Format of lnkdpn.txt
+
+```sh
+# lines prefixed by hashed are ignored
+
+# lines that specify local directory 
+# names are LOCAL dependencies:
+  
+/abs/path/mylib1
+../mylib2
+~/path/mylib3
+
+# the following line will be considered an EXTERNAL dependency,
+# since there is no such dir as './requests': 
+
+requests
+```
+## Local dependencies are recursive
+
+When the project depends on local `mylib`, it means, it also depends on all 
+the dependences of `mylib`. So after scannig `project/lnkdpn.txt` we will also 
+scan `mylib/lnkdpn.txt` the same way.
+
+
+
+Local dependences are linked into the project dir. For example, 
+`/path/to/mylib` referred from `/pathto/project/ will lead to creation of symlink `./mylib`.
+
+External dependences are installed with tools like pip.
+
+Exact behavior is specified by the program arguments.
+
+| Current dir | Scanned lnkdpn.txt  |
+|--------------------|------------|
+| /pathto/project | /pathto/project/lnkdpn.txt |
