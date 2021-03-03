@@ -27,8 +27,6 @@ and `mylib` while working on `myproject`.
 
 ## File `xxx/deps.txt` specifies depencences for `xxx`
 
-xxx can be either project or library. 
-
 For example, `/abc/myproject/deps.txt` lists dependencies for `myproject`:
 
 ```sh
