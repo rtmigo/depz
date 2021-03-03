@@ -13,7 +13,7 @@ I just want to include it. Skipping the hassle of packaging code for distributio
 So I will probably just do:
 
 ```bash
-ln -s libs/mylib projects/myproject/mylib
+$ ln -s libs/mylib projects/myproject/mylib
 ```
 
 Now `myproject` sees `mylib` as a local directory `myproject/mylib`. I can edit both `myproject` 
