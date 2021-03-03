@@ -53,7 +53,7 @@ scan `mylib/lnkdpn.txt` the same way.
 Paths are relative to the dir containing the current `lnkdpn.txt`. But resulting 
 links will always reside in the project dir. For example, when calling `lnkdpn` in `/abc/proj`:
 
-| Source  | Line | Resolves to | Creates symlink |
+| File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
 |/abc/proj/lnkdpn.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/proj/xxx|
 |/abc/proj/lnkdpn.txt|../libs/xxx|/abc/libs/xxx|/abc/proj/xxx|
