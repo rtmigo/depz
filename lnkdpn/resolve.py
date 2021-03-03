@@ -6,7 +6,6 @@ import unittest
 from pathlib import Path
 from typing import Optional
 
-
 def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:
 	"""Gives interpretation to a single line of lnkdpn.txt.
 
@@ -27,7 +26,7 @@ def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:
 		packageDirPath = rootDir / packageDir
 	packageDirPath = packageDirPath.resolve()
 
-	if packageDirPath.exists() and packageDirPath.is_dir():  # (packageDirPath/"__init__.py").exists():
+	if packageDirPath.exists() and packageDirPath.is_dir():
 		return packageDirPath
 
 
