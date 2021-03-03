@@ -1,4 +1,4 @@
 *UNSTABLE 💥 WORK IN PROGRESS*
 
-A tool for managing local project dependencies in Python and Flutter
+Command line tool for managing local project dependencies in Python and Flutter.
 
