@@ -39,8 +39,8 @@ Each line of "lnkdpn.txt" specifies a dependency.
 ../mylib2
 ~/path/mylib3
 
-# the following line will be considered an EXTERNAL dependency,
-# since there is no such dir as ./requests: 
+# the following line will be considered an EXTERNAL 
+# dependency, since directory ./requests does not exist: 
 
 requests
 ```
