@@ -25,7 +25,9 @@ and `mylib` while working on `myproject`.
 - **Portability**. To make the symlinks easy to recreate on another system
 - **Dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
 
-## xxx/deps.txt specifies depencences for xxx
+## File `xxx/deps.txt` specifies depencences for `xxx`
+
+xxx can be either project or library. 
 
 Create a file named `deps.txt` in the project root, 
 for example, `/abc/myproject/deps.txt`:
