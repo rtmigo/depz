@@ -29,8 +29,7 @@ and `mylib` while working on `myproject`.
 
 xxx can be either project or library. 
 
-Create a file named `deps.txt` in the project root, 
-for example, `/abc/myproject/deps.txt`:
+For example, `/abc/myproject/deps.txt` will list dependencies for `myproject`:
 
 ```sh
 
