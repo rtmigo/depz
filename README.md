@@ -5,7 +5,7 @@
 
 Command line tool for managing local project dependencies in Python and Flutter.
 
-## Motivation
+# Motivation
 
 Developing reusable libraries should be simple. If I have working code in a nearby directory, 
 I just want to include it. Skipping the hassle of packaging code for distribution.
