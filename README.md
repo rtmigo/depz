@@ -55,7 +55,7 @@ links will always reside in the project dir.
 
 | Source  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
-|/abc/proj/lnkdpn.txt|/abc/libs/libXxx|/abc/libs/libXxx|/abc/proj/libXxx|
-|/abc/proj/lnkdpn.txt|../libs/libXxx|/abc/libs/libXxx|/abc/proj/libXxx|
-|/abc/libs/mylib1/lnkdpn.txt|../libZzz|/abc/libs/libZzz|/abc/proj/libZzz|
+|/abc/proj/lnkdpn.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/proj/xxx|
+|/abc/proj/lnkdpn.txt|../libs/xxx|/abc/libs/xxx|/abc/proj/xxx|
+|/abc/libs/mylib1/lnkdpn.txt|../zzz|/abc/libs/zzz|/abc/proj/zzz|
  
