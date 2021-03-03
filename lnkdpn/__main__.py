@@ -101,17 +101,21 @@ def pathToLibname(path:Path) -> str:
 
 	return n
 
+def _debugIterParents(p:Path) -> Iterator[Path]:
+	"""Returns /path/to/parent/file, /path/to/parent, /path/to, /path, /"""
+	parts = list(p.parts)
+	for l in range(len(parts),0, -1):
+		yield Path(*parts[:l])
+
+
 def symlinkVerbose(realPath:Path, linkPath:Path, targetIsDirectory:bool, ifRealExists=False):
 	# because i don't Path.symlink_to understand error message...
 	if not realPath.exists():
 		if ifRealExists:
 			return
 
-		# fixme
-		p = realPath
-		while p is not None:
-			print(p, p.exists())
-			p = p.parent
+		for par in _debugIterParents(realPath):
+			print(par, par.exists())
 
 		raise FileNotFoundError(f"realPath path {realPath} does not exist")
 	if not linkPath.parent.exists():
