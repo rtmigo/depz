@@ -57,7 +57,7 @@ numpy
 ### Local dependencies are recursive
 
 When a project depends on local `mylib`, it means, it also depends on all 
-the dependences of `mylib`. So after scannig `myproject/depz.txt` we will also 
+the dependencies of `mylib`. So after scannig `myproject/depz.txt` we will also 
 scan `mylib/depz.txt` the same way.
 
 ### Paths are relative to parent of depz.txt

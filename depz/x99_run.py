@@ -26,7 +26,7 @@ Sample lines:
     The project depends on some EXTERNAL package called "requests"
 
 When the project depends on local `mylib`, it means, it also depends on all 
-the dependences of `mylib`. So after scannig "project/depz.txt" we will also 
+the dependencies of `mylib`. So after scannig "project/depz.txt" we will also 
 scan "mylib/depz.txt" the same way.
 
 Local dependences are usually linked or copied into the project dir. 
