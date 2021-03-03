@@ -20,10 +20,10 @@ setup(
 
   license='BSD-3-Clause',
 
-  # entry_points={
-  #      'console_scripts': [
-  #           'allrights = allrights:main',
-  #       ]},
+  entry_points={
+       'console_scripts': [
+            'depz = depz:runmain',
+        ]},
 
   keywords="""
   	source-code dependencies filesystem programming
@@ -32,7 +32,8 @@ setup(
   # https://pypi.org/classifiers/
   classifiers=[
     #"Development Status :: 4 - Beta",
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 2 - Pre-Alpha",
+    #"Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     'License :: OSI Approved :: BSD License',
     'Topic :: Software Development :: Documentation',
@@ -43,5 +44,5 @@ setup(
 
   # test_suite='nose.collector',
   # tests_require=['nose'],
-  zip_safe=False
+  #zip_safe=False
 )
