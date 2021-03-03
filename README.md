@@ -61,5 +61,6 @@ Exact behavior is specified by the program arguments.
 
 | Scanned  | Line | Resolves to | Creates link |
 |--------------------|------------|---------------|--------|
-|/abc/proj/lnkdpn.txt|../libs/mylib1|/abc/libs/mylib1|/abc/proj/mylib1|
+|/abc/myproj/lnkdpn.txt|/abc/libs/mylib1|/abc/libs/mylib1|/abc/proj/mylib1|
+|/abc/myproj/lnkdpn.txt|../libs/mylib1|/abc/libs/mylib1|/abc/proj/mylib1|
  
