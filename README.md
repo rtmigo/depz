@@ -1,4 +1,4 @@
-# [lnkdpn](https://github.com/rtmigo/lnkdpn)
+# [deps](https://github.com/rtmigo/lnkdpn)
 
 [![Generic badge](https://img.shields.io/badge/ready_for_use-no-red.svg)](#)
 [![Actions Status](https://github.com/rtmigo/lnkdpn/workflows/CI/badge.svg?branch=master)](https://github.com/rtmigo/lnkdpn/actions)
@@ -25,12 +25,10 @@ and `mylib` while working on `myproject`.
 - **Portability**. To make the symlinks easy to recreate on another system
 - **Dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
 
-Each line of "lnkdpn.txt" specifies a dependency.
+## xxx/deps.txt specifies depencences for xxx
 
-## lnkdpn.txt specifies depencences
-
-Create a file named `lnkdpn.txt` in the project root, 
-for example, `/abc/myproject/lnkdpn.txt`:
+Create a file named `deps.txt` in the project root, 
+for example, `/abc/myproject/deps.txt`:
 
 ```sh
 
@@ -54,7 +52,7 @@ When a project depends on local `mylib`, it means, it also depends on all
 the dependences of `mylib`. So after scannig `myproject/lnkdpn.txt` we will also 
 scan `mylib/lnkdpn.txt` the same way.
 
-### Paths are relative to parent of lnkdpn.txt
+### Paths are relative to parent of deps.txt
 
 But resulting 
 links will always reside in the project dir. For example, when running in `/abc/proj`:
