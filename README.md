@@ -8,6 +8,8 @@
 
 Command line tool for symlinking dirs with reusable code into the working project.
 
+Language-agnostic. Tested with Python and Flutter.
+
 # Motivation
 
 **Reusing code** should be simple. If I have the needed code in a **nearby directory**, 
