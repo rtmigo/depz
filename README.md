@@ -50,8 +50,8 @@ When the project depends on local `mylib`, it means, it also depends on all
 the dependences of `mylib`. So after scannig `project/lnkdpn.txt` we will also 
 scan `mylib/lnkdpn.txt` the same way.
 
-Paths are always relative to the dir containing the current `lnkdpn.txt`. Resulting 
-links will always reside in the project dir.
+Paths are relative to the dir containing the current `lnkdpn.txt`. Resulting 
+links will reside in the project dir.
 
 | Source  | Line | Resolves to | Creates link |
 |--------------------|------------|---------------|--------|
