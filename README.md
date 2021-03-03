@@ -1,4 +1,4 @@
-# [deps](https://github.com/rtmigo/lnkdpn)
+# [deps](https://github.com/rtmigo/deps)
 
 [![Generic badge](https://img.shields.io/badge/ready_for_use-no-red.svg)](#)
 [![Actions Status](https://github.com/rtmigo/lnkdpn/workflows/CI/badge.svg?branch=master)](https://github.com/rtmigo/lnkdpn/actions)
@@ -20,7 +20,7 @@ $ ln -s /abc/libs/mylib /abc/myproject/mylib
 Now `myproject` sees `mylib` as a local directory `myproject/mylib`. I can edit both `myproject` 
 and `mylib` while working on `myproject`.
 
-**lnkdpn** automates the creation of such symbolic links, solving emerging problems:
+`deps` automates the creation of such symbolic links, solving emerging problems:
 
 - **Portability**. To make the symlinks easy to recreate on another system
 - **Dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
