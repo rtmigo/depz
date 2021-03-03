@@ -42,10 +42,11 @@ For example, `/abc/myproject/deps.txt` lists dependencies for `myproject`:
 ../libs/mylib2
 ~/path/mylib3
 
-# the following line will be considered an EXTERNAL 
-# dependency, if directory ./requests does not exist: 
-
+# lines that cannot be resolved to an existing 
+# directory are considered EXTERNAL dependencies
+ 
 requests
+numpy
 ```
 ### Local dependencies are recursive
 
