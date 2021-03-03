@@ -61,4 +61,5 @@ Exact behavior is specified by the program arguments.
 
 | Scanned lnkdpn.txt  | Found line | Makes a link of | At |
 |--------------------|------------|---------------|--------|
-| `/pathto/project/lnkdpn.txt` | `../libs/mylib1` | `/pathto/libs/mylib1/` | `/pathto/project/lnkdpn.txt` | 
+| `/abc/proj/lnkdpn.txt` | `../libs/mylib1` | `/abc/libs/mylib1` | `/abc/proj/mylib1` |
+ 
