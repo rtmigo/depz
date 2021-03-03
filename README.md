@@ -9,7 +9,7 @@ Command line tool for managing local project dependencies in Python and Flutter.
 
 **Reusing code** should be simple. If I have working code in a **nearby directory**, 
 I just want to **include it** into the project. Without packaging it as a library 
-for distribution and messing with IDE settings.
+for distribution or messing with IDE settings.
 
 So I will probably just do:
 
