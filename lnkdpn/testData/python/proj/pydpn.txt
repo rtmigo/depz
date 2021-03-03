@@ -1,0 +1,3 @@
+../libs/lib1
+../libs/lib2_py
+numpy

@@ -1,0 +1,2 @@
+../libraryC
+externalFromC
