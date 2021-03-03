@@ -30,7 +30,7 @@ Each line of "lnkdpn.txt" specifies a dependency.
 ## Format of lnkdpn.txt
 
 ```sh
-# lines prefixed by hashed are ignored
+# lines prefixed by hashes are ignored
 
 # lines that specify local directory 
 # names are LOCAL dependencies:
@@ -40,7 +40,7 @@ Each line of "lnkdpn.txt" specifies a dependency.
 ~/path/mylib3
 
 # the following line will be considered an EXTERNAL dependency,
-# since there is no such dir as './requests': 
+# since there is no such dir as ./requests: 
 
 requests
 ```
