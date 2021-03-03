@@ -54,7 +54,7 @@ When a project depends on local `mylib`, it means, it also depends on all
 the dependences of `mylib`. So after scannig `myproject/lnkdpn.txt` we will also 
 scan `mylib/lnkdpn.txt` the same way.
 
-### Paths are relative to lnkdpn.txt
+### Paths are relative to parent of lnkdpn.txt
 
 But resulting 
 links will always reside in the project dir. For example, when running in `/abc/proj`:
