@@ -2,6 +2,8 @@
 
 # SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
+from lnkdpn.resolve import resolvePath
+from lnkdpn.x00_common import Mode
 
 helptxt = """
 
@@ -38,7 +40,6 @@ Exact behavior is specified by the program arguments.
 """
 
 from typing import *
-from enum import IntEnum, auto
 from collections import deque, defaultdict
 import unittest, os
 from pathlib import Path
@@ -59,45 +60,12 @@ def isPipenvDir(path: Path):
 	return (path / "Pipfile").exists()
 
 
-def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:
-	# если packageDir задает относительный путь - он будет отмеряться от rootDir
-	# если packageDir задает вообще не путь - вернется None
-
-	packageDir = packageDir.strip()
-	packageDir = os.path.expanduser(packageDir)
-	packageDir = os.path.expandvars(packageDir)
-	packageDir = os.path.normpath(packageDir)
-
-	if os.path.isabs(packageDir):
-		packageDirPath = Path(packageDir)
-	else:
-		packageDirPath = rootDir / packageDir
-	packageDirPath = packageDirPath.resolve()
-
-	# packageDirPath = Path(packageDir)
-
-	if packageDirPath.exists() and packageDirPath.is_dir():  # (packageDirPath/"__init__.py").exists():
-		return packageDirPath
-
-
-def isDirMatchesLib(dirPath:Path, libName:str) -> bool:
-	return dirPath.name == libName or dirPath.name == libName + "_py" or dirPath.name == libName + "_lib"
-
-class TestDirnameMatch(unittest.TestCase):
-	def test(self):
-		self.assertEqual(isDirMatchesLib(Path("/path/to/module"), "module"), True)
-		self.assertEqual(isDirMatchesLib(Path("/path/to/module_py"), "module"), True)
-		self.assertEqual(isDirMatchesLib(Path("/path/to/module_lib"), "module"), True)
-		self.assertEqual(isDirMatchesLib(Path("/path/to/module/sub"), "module"), False)
-		self.assertEqual(isDirMatchesLib(Path("/path/to/labuda"), "module"), False)
-
-
-def findLocalLib(libsDir: Path, libName: str):
-	for srcDir in libsDir.glob("*"):
-		if srcDir.is_dir() and isDirMatchesLib(srcDir, libName):
-			return srcDir
-
-	raise FileNotFoundError(f"Cannot find local library named '{libName}'")
+# def findLocalLib(libsDir: Path, libName: str, mode:Mode):
+# 	for srcDir in libsDir.glob("*"):
+# 		if srcDir.is_dir() and isDirnameMatchesLib(srcDir, libName) and looksLikeLib(srcDir, mode):
+# 			return srcDir
+#
+# 	raise FileNotFoundError(f"Cannot find local library named '{libName}'")
 
 
 def pathToLibname(path: Path) -> str:
@@ -163,15 +131,23 @@ def pydpnFiles(dirPath: Path) -> Iterable[Path]:
 	for p in [
 		dirPath / "lnkdpn.txt",
 		dirPath / "lib" / "lnkdpn.txt",
-		dirPath / "pydpn.txt", # deprecated since 2021-03
+		dirPath / "pydpn.txt",  # deprecated since 2021-03
 		dirPath / "lib" / "pydpn.txt"  # deprecated since 2021-03
 	]:
 		if p.exists():
 			yield p
 
 
+def iterLnkdpnLines(file: Path) -> Iterator[str]:
+	"""Returns all lines except empty and comments"""
+	for line in file.read_text().splitlines():
+		line = line.partition("#")[0].strip()
+		if line:
+			yield line
+
+
 def rescan(projectDir: Path, relink: bool) -> Dict[str, Set[str]]:
-	# сканирует файл pydpn.txt в каталоге проекта, а также, следуя по ссылкам на другие локальные
+	# сканирует файл lnkdpn.txt в каталоге проекта, а также, следуя по ссылкам на другие локальные
 	# библиотеки - все файлы pydpn.txt в тех библиотеках.
 	#
 	# В итоге на локальные библиотеки делает симлинки в каталоге project/pkgs (заменяя все
@@ -190,17 +166,13 @@ def rescan(projectDir: Path, relink: bool) -> Dict[str, Set[str]]:
 
 		currDir = pathsToAnalyze.popleft()  # каталог проекта или библиотеки
 
-		for pydpnFile in pydpnFiles(currDir):
+		for lnkdpnFile in pydpnFiles(currDir):
 
-			print(f"Analyzing {pydpnFile}")
+			print(f"Scanning {lnkdpnFile}")
 
-			for line in pydpnFile.read_text().splitlines():
+			for line in iterLnkdpnLines(lnkdpnFile):
 
-				line = line.partition("#")[0].strip()
-				if not line:
-					continue
-
-				localPkgPath = resolvePath(pydpnFile.parent, line)
+				localPkgPath = resolvePath(lnkdpnFile.parent, line)
 
 				if localPkgPath:
 
@@ -339,10 +311,6 @@ def pipInstallCommand(libs: Dict[str, Set[str]]) -> Optional[str]:
 
 	return "pip install " + " ".join(libs)
 
-
-class Mode(IntEnum):
-	python = auto()
-	flutter = auto()
 
 
 def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
