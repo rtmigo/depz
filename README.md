@@ -61,7 +61,7 @@ links will always reside in the project dir. For example, when running in `/abc/
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
-|/abc/proj/lnkdpn.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/proj/xxx|
-|/abc/proj/lnkdpn.txt|../libs/xxx|/abc/libs/xxx|/abc/proj/xxx|
-|/abc/libs/mylib1/lnkdpn.txt|../zzz|/abc/libs/zzz|/abc/proj/zzz|
+|/abc/myproject/lnkdpn.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
+|/abc/myproject/lnkdpn.txt|../libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
+|/abc/libs/xxx/lnkdpn.txt|../zzz|/abc/libs/zzz|/abc/myproject/zzz|
  
