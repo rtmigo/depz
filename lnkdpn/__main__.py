@@ -101,13 +101,26 @@ def pathToLibname(path:Path) -> str:
 
 	return n
 
+def symlinkVerbose(realPath:Path, linkPath:Path, targetIsDirectory:bool, ifRealExists=False):
+	# because i don't understand error message...
+	if not realPath.exists():
+		if ifRealExists:
+			return
+		raise FileNotFoundError(f"realPath path {realPath} does not exist")
+	if not linkPath.parent.exists():
+		raise FileNotFoundError(f"The parent dir of destination linkPath {linkPath} does not exist")
+	linkPath.symlink_to(realPath, target_is_directory=targetIsDirectory)
+
+
 
 def symlinkPython(srcLibDir:Path, dstPythonpathDir:Path):
 
 	# создает в каталоге dstPythonpathDir ссылку на библиотеку, расположенную в srcLibDir
 
 	name = pathToLibname(srcLibDir)
-	(dstPythonpathDir / name).symlink_to(srcLibDir, target_is_directory=True)
+	#symlinkVerbose()
+	symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
+	#(dstPythonpathDir / name).symlink_to(srcLibDir, target_is_directory=True)
 	print(f'Created symlink "{name}" -> "{srcLibDir}"')
 
 
@@ -116,8 +129,12 @@ def symlinkFlutter(srcLibDir:Path, dstProjectDir:Path):
 	# создает в каталоге dstProjectDir ссылку на библиотеку, расположенную в srcLibDir
 
 	name = pathToLibname(srcLibDir)
-	(dstProjectDir / "lib" / name ).symlink_to((srcLibDir/"lib").absolute(), target_is_directory=True)
-	(dstProjectDir / "test" / name ).symlink_to((srcLibDir/"test").absolute(), target_is_directory=True)
+
+	symlinkVerbose((srcLibDir/"lib").absolute(), dstProjectDir / "lib" / name, targetIsDirectory=True)
+	symlinkVerbose((srcLibDir/"test").absolute(), dstProjectDir / "test" / name, targetIsDirectory=True, ifRealExists=True)
+
+	#(dstProjectDir / "lib" / name ).symlink_to((srcLibDir/"lib").absolute(), target_is_directory=True)
+	#(dstProjectDir / "test" / name ).symlink_to((srcLibDir/"test").absolute(), target_is_directory=True)
 
 
 def pydpnFiles(dirPath:Path) -> Iterable[Path]:
