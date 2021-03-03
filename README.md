@@ -30,7 +30,7 @@ and `mylib` while working on `myproject`.
 
 # Usage
 
-- Specify dependecies in `depz.txt`
+- Specify dependencies in `depz.txt`
 - Run the command `depz`
 
 # Specify dependencies
