@@ -29,7 +29,7 @@ and `mylib` while working on `myproject`.
 
 xxx can be either project or library. 
 
-For example, `/abc/myproject/deps.txt` will list dependencies for `myproject`:
+For example, `/abc/myproject/deps.txt` lists dependencies for `myproject`:
 
 ```sh
 
