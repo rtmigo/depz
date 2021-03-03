@@ -6,7 +6,7 @@
 [![Generic badge](https://img.shields.io/badge/CI_Python-3.8,_3.9-blue.svg)](#)
 
 
-Command line tool for symlinking dirs with reusable code into the working project.
+Command line tool for symlinking directories with reusable code into the working project.
 
 Language-agnostic. Tested with Python and Flutter.
 

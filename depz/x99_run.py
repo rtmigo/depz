@@ -47,16 +47,16 @@ def runmain():
 	parser.add_argument("-d", "--default", action="store_true",
 						help="shorthand for --relink --install")
 	parser.add_argument("--relink", action="store_true",
-						help="remove all symlinks from the project dir and create symlinks to local dependences")
-	parser.add_argument("--install", action="store_true",
-						help="install external dependences (run 'pip')")
-	parser.add_argument("--reqs", action="store_true",
-						help="write external dependences into requirements.txt")
+						help="remove all symlinks from the project dir and create symlinks to local dependencies")
+	parser.add_argument("--pypip", action="store_true",
+						help="install external Python dependencies with pip (run 'pip install')")
+	parser.add_argument("--pyreq", action="store_true",
+						help="write external dependences list into requirements.txt")
 
 	args = parser.parse_args()
 
-	doo(updateReqsFile=args.reqs,
-		installExternalDeps=args.install or args.default,
+	doo(updateReqsFile=args.pyreq,
+		installExternalDeps=args.pypip or args.default,
 		symlinkLocalDeps=args.relink or args.default)
 
 
