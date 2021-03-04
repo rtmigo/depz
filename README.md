@@ -147,7 +147,7 @@ External dependencies: pandas numpy requests
 
 The `-e` argument causes the command to print only the list of dependencies.
 
-#### In one line splitted by spaces:
+#### In one line:
 
 ```txt
 $ depz -e line
@@ -155,12 +155,12 @@ $ depz -e line
 pandas numpy requests
 ```
 
-Sample usage:
+Sample usage for installing Python depedencies:
 ```txt
 $ pip3 install $(depz -e line)
 ```
 
-#### One dependency per line:
+#### One per line:
 ```txt
 $ depz -e multi
 
@@ -168,6 +168,8 @@ pandas
 numpy
 requests
 ```
+
+Sample usage for creating Python-compatible depedencies file:
 
 Sample usage:
 ```txt
