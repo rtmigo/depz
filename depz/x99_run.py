@@ -58,18 +58,11 @@ def runmain(programArgs: List[str]):
 	parser.add_argument("-e", type=str, default="default", choices=["default", "line", "multi"],
 						help='When specified, only external dependencies will be printed to stdout.')
 
-	# parser.add_argument("-d", "--default", action="store_true",
-	# 					help="shorthand for --relink --install")
 	parser.add_argument("--relink", action="store_true",
 						help="Remove all symlinks from the project dir and create symlinks to local dependencies")
 
 	parser.add_argument("--version", action="store_true",
 						help="Print version and exit")
-
-	# parser.add_argument("--pypip", action="store_true",
-	# 					help="install external Python dependencies with pip (run 'pip install')")
-	# parser.add_argument("--pyreq", action="store_true",
-	# 					help="write external dependences list into requirements.txt")
 
 	args = parser.parse_args(programArgs)
 
