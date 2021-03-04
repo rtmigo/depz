@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from depz.resolve import resolvePath
+from depz.testsBase import TestWithTempDir
+from depz.unlink import unlinkAll
 from depz.x00_common import Mode
 
 
@@ -12,11 +14,8 @@ import unittest, os
 from pathlib import Path
 
 
-def unlinkAll(parent: Path):
-	# removes all symlinks that are immediate children of parent dir
-	for child in parent.glob("*"):
-		if child.is_symlink():
-			child.unlink()
+
+
 
 
 def isFlutterDir(path: Path) -> bool:
@@ -81,9 +80,6 @@ def symlinkFlutter(srcLibDir: Path, dstProjectDir: Path):
 	symlinkVerbose((srcLibDir / "test").absolute(), dstProjectDir / "test" / name,
 				   targetIsDirectory=True, ifRealExists=True)
 
-
-# (dstProjectDir / "lib" / name ).symlink_to((srcLibDir/"lib").absolute(), target_is_directory=True)
-# (dstProjectDir / "test" / name ).symlink_to((srcLibDir/"test").absolute(), target_is_directory=True)
 
 
 def pydpnFiles(dirPath: Path) -> Iterable[Path]:
@@ -189,29 +185,7 @@ class Test(unittest.TestCase):
 	def dataFlutterDir(self) -> Path:
 		return self.dataDir / "flutter"
 
-	def testUnlink(self):
 
-		tempSubdir = (self.dataPythonDir / "iLikeToBeLinkedTo").absolute()
-		tempSubdir.mkdir(exist_ok=True)
-
-		link1 = (self.dataDir / "link1").absolute()
-		link2 = (self.dataDir / "link2").absolute()
-
-		if not link1.exists():
-			link1.symlink_to(tempSubdir, True)
-
-		if not link2.exists():
-			link2.symlink_to(tempSubdir, True)
-
-		self.assertTrue(link1.exists() and link1.is_symlink())
-		self.assertTrue(link2.exists() and link2.is_symlink())
-
-		unlinkAll(self.dataDir)
-
-		self.assertFalse(link1.exists())
-		self.assertFalse(link2.exists())
-
-		os.rmdir(str(tempSubdir))
 
 	def testRelinkPython(self):
 
@@ -274,7 +248,10 @@ def pipInstallCommand(libs: Dict[str, Set[str]]) -> Optional[str]:
 
 def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
 		symlinkLocalDeps: bool = False):
+
 	projectPath = Path(".")
+
+	print(f"Project dir: {projectPath.absolute()}")
 
 	mode: Mode = Mode.python
 	if isFlutterDir(projectPath):

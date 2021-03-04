@@ -6,6 +6,9 @@ import unittest
 from pathlib import Path
 from typing import Optional
 
+from depz.testsBase import TestWithTempDir
+
+
 def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:
 	"""Gives interpretation to a single line of depz.txt.
 
@@ -30,20 +33,7 @@ def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:
 		return packageDirPath
 
 
-class TestResolvePath(unittest.TestCase):
-
-	def setUp(self):
-		from tempfile import TemporaryDirectory
-		self._td = TemporaryDirectory()
-		self.tempDir = Path(self._td.name)
-
-	def tearDown(self) -> None:
-		self._td.cleanup()
-
-	@staticmethod
-	def mkd(p:Path) -> Path:
-		p.mkdir(parents=True)
-		return p
+class TestResolvePath(TestWithTempDir):
 
 	def test_relative(self):
 		projectDir = self.mkd(self.tempDir/"prj"/"project")
