@@ -87,6 +87,7 @@ def runmain(programArgs: List[str] = None):
 	outputMode: OutputMode
 
 	if args.e == "default":
+		printVerbose.allowed = True
 		outputMode = OutputMode.default
 	elif args.e == "line":
 		printVerbose.allowed = False
@@ -98,7 +99,7 @@ def runmain(programArgs: List[str] = None):
 		raise ValueError
 
 	doo(Path(args.project),
-		symlinkLocalDeps=True,
+		symlinkLocalDeps=args.relink,
 		mode=mode, outputMode=outputMode)
 
 

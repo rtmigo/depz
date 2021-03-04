@@ -29,7 +29,7 @@ def _debugIterParents(p: Path) -> Iterator[Path]:
 		yield Path(*parts[:l])
 
 
-def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool,
+def symlinkVerbose(realPath: Path, linkPath: Path,
 				   createLinkParent: bool = False):
 	"""Creates a symlink. Throws more detailed exceptions, than Path.
 
@@ -38,29 +38,38 @@ def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool,
 	"""
 
 	if not realPath.exists():
-		for par in _debugIterParents(realPath):
-			printVerbose(par, par.exists())
+		# for par in _debugIterParents(realPath):
+		# 	printVerbose(par, par.exists())
 		raise FileNotFoundError(f"realPath path {realPath} does not exist")
 	if createLinkParent:
 		linkPath.parent.mkdir(parents=True, exist_ok=True)
 	elif not linkPath.parent.exists():
 		raise FileNotFoundError(f"The parent dir of destination linkPath {linkPath} does not exist")
 
-	printVerbose("Creating symlink:")
-	printVerbose(f"  src: {realPath.absolute()}")
-	printVerbose(f"  dst: {linkPath.absolute()}")
-	linkPath.symlink_to(realPath, target_is_directory=targetIsDirectory)
+	linkPath.symlink_to(realPath, target_is_directory=realPath.is_dir())
 
 
-def symlinkPython(srcLibDir: Path, dstPythonpathDir: Path):
-	# создает в каталоге dstPythonpathDir ссылку на библиотеку, расположенную в srcLibDir
+# def symlinkPython(srcLibDir: Path, dstPythonpathDir: Path):
+# 	# создает в каталоге dstPythonpathDir ссылку на библиотеку, расположенную в srcLibDir
+#
+# 	name = pathToLibname(srcLibDir)
+# 	symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
+
+def defaultMapping(srcLibDir: Path, dstPythonpathDir: Path) -> Iterator[Tuple[Path, Path]]:
+	"""Returns pairs srcPath -> symlinkPath
+
+		libraryA -> project/libraryA
+		libraryB -> project/libraryB
+
+	"""
 
 	name = pathToLibname(srcLibDir)
-	symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
+	# symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
+	yield srcLibDir, dstPythonpathDir / name
 
 
-def symlinkLayout(srcLibDir: Path, dstProjectDir: Path):
-	"""Creates symlinks from items inside srcLibDir to items inside dstProjectDir
+def layoutMapping(srcLibDir: Path, dstProjectDir: Path) -> Iterator[Tuple[Path, Path]]:
+	"""Returns pairs srcPath -> symlinkPath
 
 	libraryA/lib	-> project/lib/libraryA
 	libraryA/test	-> project/test/libraryA
@@ -74,8 +83,26 @@ def symlinkLayout(srcLibDir: Path, dstProjectDir: Path):
 
 	for item in srcLibDir.glob("*"):
 		if item.is_dir():
-			symlinkVerbose((srcLibDir / item.name).absolute(), dstProjectDir / item.name / libName,
-						   targetIsDirectory=True, createLinkParent=True)
+			yield (srcLibDir / item.name).absolute(), dstProjectDir / item.name / libName
+
+
+# def symlinkLayout(srcLibDir: Path, dstProjectDir: Path):
+# 	"""Creates symlinks from items inside srcLibDir to items inside dstProjectDir
+#
+# 	libraryA/lib	-> project/lib/libraryA
+# 	libraryA/test	-> project/test/libraryA
+#
+# 	libraryB/lib	-> project/lib/libraryB
+# 	libraryB/test	-> project/test/libraryB
+#
+# 	"""
+#
+# 	libName = pathToLibname(srcLibDir)
+#
+# 	for item in srcLibDir.glob("*"):
+# 		if item.is_dir():
+# 			symlinkVerbose((srcLibDir / item.name).absolute(), dstProjectDir / item.name / libName,
+# 						   targetIsDirectory=True, createLinkParent=True)
 
 
 def pydpnFiles(dirPath: Path) -> Iterable[Path]:
@@ -137,27 +164,57 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 					assert not localPkgPath
 					externalLibs[line].add(pathToLibname(currDir))
 
+	pkgsDir = projectDir  # todo
+
+	mapping: Dict[Path, Path] = dict()
+
+	if mode == Mode.layout:
+		mapper = layoutMapping
+	# symlinkLayout(path, pkgsDir)
+	else:
+		mapper = defaultMapping
+
+	for path in localLibs:
+		for k, v in mapper(path, pkgsDir):
+			mapping[k] = v
+
+	# symlinkPython(path, pkgsDir)
+
 	if relink:
 
 		# пересоздаю симлинки (удаляю все, создаю актуальные)
 
-		pkgsDir = projectDir  # /PKGSBN
 		pkgsDir.mkdir(exist_ok=True)
 		unlinkAll(pkgsDir)
 		if mode == Mode.layout:
-			# if isFlutterDir(pkgsDir):
-			unlinkAll(pkgsDir / "lib")
-			unlinkAll(pkgsDir / "test")
+			for sub in pkgsDir.glob("*"):
+				unlinkAll(sub)
+		# if isFlutterDir(pkgsDir):
 
-		# isFlutter = isFlutterDir(projectDir)
+		# unlinkAll(pkgsDir / "lib") #todo
+		# unlinkAll(pkgsDir / "test")
 
-		# printVerbose("localLibs:", localLibs)
+	# for path in localLibs:
+	# 	if mode == Mode.layout:
+	# 		symlinkLayout(path, pkgsDir)
+	# 	else:
+	# 		symlinkPython(path, pkgsDir)
 
-		for path in localLibs:
-			if mode == Mode.layout:
-				symlinkLayout(path, pkgsDir)
-			else:
-				symlinkPython(path, pkgsDir)
+	for srcPath in sorted(mapping):
+		dstPath = mapping[srcPath].absolute()
+		srcPath = srcPath.absolute()
+		if relink:
+			printVerbose("Creating symlink:")
+		else:
+			printVerbose("Supposed mapping:")
+
+		printVerbose(f"  real: {srcPath}")
+		printVerbose(f"  link: {dstPath}")
+
+		# printVerbose(srcPath)
+		# print(srcPath)
+		if relink:
+			symlinkVerbose(srcPath, mapping[srcPath], createLinkParent=(mode == Mode.layout))
 
 	# возвращаю то, что не было ссылками на локальные проекты: т.е. внешние зависимости
 

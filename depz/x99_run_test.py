@@ -7,6 +7,7 @@ import sys
 import unittest
 from io import StringIO
 from pathlib import Path
+from pprint import pprint
 from tempfile import TemporaryDirectory
 from typing import List, Iterator, Tuple
 
@@ -115,6 +116,11 @@ class TestsWithPythonLayout(Tests):
 		createFile(self.tempDir / "libs" / "lib2" / "__init__.py")
 		createFile(self.tempDir / "libs" / "lib3" / "__init__.py")
 
+	expectedUnchanged = [
+		'depz.txt (F)',
+		'stub.py (F)'
+	]
+
 	expectedPythonAfterLink = [
 		'depz.txt (F)',
 		'lib1 (LD)',
@@ -123,11 +129,13 @@ class TestsWithPythonLayout(Tests):
 		'lib2/__init__.py (F)',
 		'lib3 (LD)',
 		'lib3/__init__.py (F)',
-		'stub.py (F)']
+		'stub.py (F)'
+	]
 
-	def test_default_mode(self):
+	def test_relink_default(self):
 		runmain(["--project", str(self.tempDir / "project"), "--relink"])
-		result = listDir((self.tempDir / "project"))
+		with CapturedOutput() as output:
+			result = listDir((self.tempDir / "project"))
 		self.assertListEqual(result, self.expectedPythonAfterLink)
 
 	def _run_relink_current_dir(self):
@@ -135,10 +143,10 @@ class TestsWithPythonLayout(Tests):
 		result = listDir((self.tempDir / "project"))
 		self.assertListEqual(result, self.expectedPythonAfterLink)
 
-	def test_current_dir_as_project_dir(self):
+	def test_relink_current_dir_as_project_dir(self):
 		# when project dir not specified, use the current dir
 
-		os.chdir(str(self.tempDir / "project"))  # changing current dir the project
+		os.chdir(self.tempDir / "project")  # changing current dir the project
 		self._run_relink_current_dir()
 
 	@unittest.expectedFailure
@@ -151,15 +159,31 @@ class TestsWithPythonLayout(Tests):
 
 		self._run_relink_current_dir()
 
-	def test_print_externals_one_line(self):
+	def test_relink_print_externals_one_line(self):
 		with CapturedOutput() as output:
 			runmain(["--project", str(self.tempDir / "project"), "--relink", "-e", "line"])
 		self.assertEqual(output.std.strip(), "numpy requests")
 
-	def test_print_externals_multi_lines(self):
+	def test_relink_print_externals_multi_lines(self):
 		with CapturedOutput() as output:
 			runmain(["--project", str(self.tempDir / "project"), "--relink", "-e", "multi"])
 		self.assertEqual(output.std.strip(), "numpy\nrequests")
+
+	def test_scan_only(self):
+		os.chdir(self.tempDir / "project")
+		with CapturedOutput() as output:
+			runmain([])
+		result = listDir((self.tempDir / "project"))
+		# print("!!!!!")
+		# pprint(result)
+		# print(output.std)
+		# print(output.err)
+		self.assertListEqual(result, self.expectedUnchanged)
+		self.assertTrue("Supposed mapping:" in output.std)
+
+# print(output.std)
+# exit(1)
+# self.assertEqual(output.std.strip(), "numpy requests")
 
 
 class TestsWithFluterLayout(Tests):

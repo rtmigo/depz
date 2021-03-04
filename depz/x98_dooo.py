@@ -21,9 +21,9 @@ def doo(projectPath: Path,
 
 	if outputMode == OutputMode.default:
 		if externalLibs:
-			print("External dependencies:", " ".join(externalLibs))
+			printVerbose("External dependencies:" + (" ".join(externalLibs)))
 		else:
-			print("No external dependencies.")
+			printVerbose("No external dependencies.")
 	elif outputMode == OutputMode.one_line:
 		print(" ".join(externalLibs))
 	elif outputMode == OutputMode.multi_line:
