@@ -73,6 +73,7 @@ def runmain(programArgs: List[str] = None):
 		lastMod = dt.datetime.fromtimestamp(
 			(Path(__file__).parent / "x00_version.py").stat().st_mtime)
 		print(f"DEPZ {__version__} (c) 2020-{lastMod.year} Art Galkin <ortemeo@gmail.com>")
+		print("https://github.com/rtmigo/depz")
 		exit(0)
 
 	mode: Mode
