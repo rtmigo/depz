@@ -60,7 +60,7 @@ $ pip3 install depz --upgrade
 
 # Specify dependencies
 
-File `xxx/depz.txt` lists dependencies for `xxx`:
+File `aaa/depz.txt` lists dependencies for `aaa`:
 - `/abc/myproject/depz.txt` for `myproject`
 - `/abc/libs/mylib/depz.txt` for `mylib`
 
@@ -120,17 +120,17 @@ The following examples show how the directories will be linked when running `dep
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
-|/abc/project/depz.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/project/xxx|
-|/abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
-|/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/project/zzz|
+|/abc/project/depz.txt|/abc/libs/aaa|/abc/libs/aaa|/abc/project/aaa|
+|/abc/project/depz.txt|../libs/bbb|/abc/libs/bbb|/abc/project/bbb|
+|/abc/libs/aaa/depz.txt|../ccc|/abc/libs/ccc|/abc/project/ccc|
 
 #### With `--mode=layout`
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
-| /abc/project/depz.txt | /abc/libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
-| /abc/project/depz.txt | ../libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
-| /abc/libs/xxx/depz.txt | ../zzz|/abc/libs/zzz/src<br/>/abc/libs/zzz/test|/abc/project/src/zzz<br/>/abc/project/test/zzz |
+| /abc/project/depz.txt | /abc/libs/aaa|/abc/libs/aaa/src<br/>/abc/libs/aaa/test|/abc/project/src/aaa<br/>/abc/project/test/aaa |
+| /abc/project/depz.txt | ../libs/aaa|/abc/libs/bbb/src<br/>/abc/libs/bbb/test|/abc/project/src/bbb<br/>/abc/project/test/bbb |
+| /abc/libs/aaa/depz.txt | ../ccc|/abc/libs/ccc/src<br/>/abc/libs/ccc/test|/abc/project/src/ccc<br/>/abc/project/test/ccc |
 
 This is useful for frameworks with strict directory structure such as Flutter.
 
