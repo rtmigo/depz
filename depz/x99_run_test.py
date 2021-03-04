@@ -2,14 +2,14 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from __future__ import annotations
+
 import os
 import sys
 import unittest
 from io import StringIO
 from pathlib import Path
-from pprint import pprint
 from tempfile import TemporaryDirectory
-from typing import List, Iterator, Tuple
+from typing import List, Iterator
 
 from depz import runmain
 
@@ -140,7 +140,6 @@ class TestsWithPythonLayout(Tests):
 		self.assertListEqual(result, self.expectedPythonAfterLink)
 		self.assertTrue("Creating symlink" in output.std)
 
-
 	def _run_relink_current_dir(self):
 		runmain(["--relink"])
 		result = listDir((self.tempDir / "project"))
@@ -198,6 +197,7 @@ class TestsWithPythonLayout(Tests):
 	def test_project_dir_does_not_exist(self):
 		with self.assertRaises(FileNotFoundError):
 			runmain(["--project", "labuda"])
+
 
 # print(output.std)
 # exit(1)
@@ -257,8 +257,6 @@ class TestsWithFluterLayout(Tests):
 	def test_relink_layout(self):
 		runmain(["--project", str(self.tempDir / "project"), "--relink", "--mode", "layout"])
 		result = listDir((self.tempDir / "project"))
-
-		from pprint import pprint
 
 		self.assertListEqual(result, self.expectedAfterLink)
 

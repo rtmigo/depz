@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import *
 
 from depz.x00_common import Mode, printVerbose
-from depz.x01_testsBase import TestWithDataDir
 from depz.x50_resolve import resolvePath
 from depz.x50_unlink import unlinkAll
 
@@ -49,12 +48,6 @@ def symlinkVerbose(realPath: Path, linkPath: Path,
 	linkPath.symlink_to(realPath, target_is_directory=realPath.is_dir())
 
 
-# def symlinkPython(srcLibDir: Path, dstPythonpathDir: Path):
-# 	# создает в каталоге dstPythonpathDir ссылку на библиотеку, расположенную в srcLibDir
-#
-# 	name = pathToLibname(srcLibDir)
-# 	symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
-
 def defaultMapping(srcLibDir: Path, dstPythonpathDir: Path) -> Iterator[Tuple[Path, Path]]:
 	"""Returns pairs srcPath -> symlinkPath
 
@@ -63,9 +56,8 @@ def defaultMapping(srcLibDir: Path, dstPythonpathDir: Path) -> Iterator[Tuple[Pa
 
 	"""
 
-	name = pathToLibname(srcLibDir)
-	# symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
-	yield srcLibDir, dstPythonpathDir / name
+	libName = pathToLibname(srcLibDir)
+	yield srcLibDir, dstPythonpathDir / libName
 
 
 def layoutMapping(srcLibDir: Path, dstProjectDir: Path) -> Iterator[Tuple[Path, Path]]:
@@ -84,25 +76,6 @@ def layoutMapping(srcLibDir: Path, dstProjectDir: Path) -> Iterator[Tuple[Path, 
 	for item in srcLibDir.glob("*"):
 		if item.is_dir():
 			yield (srcLibDir / item.name).absolute(), dstProjectDir / item.name / libName
-
-
-# def symlinkLayout(srcLibDir: Path, dstProjectDir: Path):
-# 	"""Creates symlinks from items inside srcLibDir to items inside dstProjectDir
-#
-# 	libraryA/lib	-> project/lib/libraryA
-# 	libraryA/test	-> project/test/libraryA
-#
-# 	libraryB/lib	-> project/lib/libraryB
-# 	libraryB/test	-> project/test/libraryB
-#
-# 	"""
-#
-# 	libName = pathToLibname(srcLibDir)
-#
-# 	for item in srcLibDir.glob("*"):
-# 		if item.is_dir():
-# 			symlinkVerbose((srcLibDir / item.name).absolute(), dstProjectDir / item.name / libName,
-# 						   targetIsDirectory=True, createLinkParent=True)
 
 
 def pydpnFiles(dirPath: Path) -> Iterable[Path]:
@@ -170,7 +143,6 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 
 	if mode == Mode.layout:
 		mapper = layoutMapping
-	# symlinkLayout(path, pkgsDir)
 	else:
 		mapper = defaultMapping
 
@@ -178,27 +150,13 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 		for k, v in mapper(path, pkgsDir):
 			mapping[k] = v
 
-	# symlinkPython(path, pkgsDir)
-
 	if relink:
-
-		# пересоздаю симлинки (удаляю все, создаю актуальные)
-
+		# removing old links
 		pkgsDir.mkdir(exist_ok=True)
 		unlinkAll(pkgsDir)
 		if mode == Mode.layout:
 			for sub in pkgsDir.glob("*"):
 				unlinkAll(sub)
-		# if isFlutterDir(pkgsDir):
-
-		# unlinkAll(pkgsDir / "lib") #todo
-		# unlinkAll(pkgsDir / "test")
-
-	# for path in localLibs:
-	# 	if mode == Mode.layout:
-	# 		symlinkLayout(path, pkgsDir)
-	# 	else:
-	# 		symlinkPython(path, pkgsDir)
 
 	for srcPath in sorted(mapping):
 		dstPath = mapping[srcPath].absolute()
@@ -211,8 +169,6 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 		printVerbose(f"  real: {srcPath}")
 		printVerbose(f"  link: {dstPath}")
 
-		# printVerbose(srcPath)
-		# print(srcPath)
 		if relink:
 			symlinkVerbose(srcPath, mapping[srcPath], createLinkParent=(mode == Mode.layout))
 
