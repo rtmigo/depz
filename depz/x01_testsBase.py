@@ -13,13 +13,13 @@ class TestWithDataDir(unittest.TestCase):
 			raise FileNotFoundError(d)
 		return d
 
-	@property
-	def dataPythonDir(self) -> Path:
-		return self.dataDir / "python"
-
-	@property
-	def dataFlutterDir(self) -> Path:
-		return self.dataDir / "flutter"
+# @property
+# def dataPythonDir(self) -> Path:
+# 	return self.dataDir / "python"
+#
+# @property
+# def dataFlutterDir(self) -> Path:
+# 	return self.dataDir / "flutter"
 
 
 class TestWithTempDir(unittest.TestCase):

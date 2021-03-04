@@ -185,49 +185,48 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 
 	return externalLibs
 
-
-class TestRelink(TestWithDataDir):
-
-	# TODO Get rid of data: recreate files on test start
-
-	def testRelinkPython(self):
-		libSearchDir = self.dataPythonDir / "libs"
-		projDir = self.dataPythonDir / "proj"
-		libLinksDir = projDir  # self.testDir/"proj"/PKGSBN
-
-		unlinkAll(libLinksDir)
-
-		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
-						 {"stub.py", "depz.txt"})
-
-		externals = rescan(projDir, relink=True, mode=Mode.default)
-
-		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
-						 {"stub.py", "depz.txt", 'lib3', 'lib2', 'lib1'})
-
-		self.assertEqual(externals, {'numpy': {'proj'}, 'requests': {'lib1'}})
-
-	def testRelinkFlutter(self):
-		projectDir = self.dataFlutterDir / "project"
-
-		expectedFiles = [
-			projectDir / "lib" / "libraryA" / "code1.dart",
-			projectDir / "lib" / "libraryA" / "code2.dart",
-			projectDir / "lib" / "libraryB" / "code3.dart",
-			projectDir / "lib" / "libraryC" / "something.dart",
-			projectDir / "test" / "libraryA" / "testA.dart",
-			projectDir / "test" / "libraryB" / "testB.dart",
-		]
-
-		unlinkAll(projectDir / "lib")
-		unlinkAll(projectDir / "test")
-
-		self.assertTrue(all(not path.exists() for path in expectedFiles))
-
-		externals = rescan(projectDir, relink=True, mode=Mode.layout)
-
-		for path in expectedFiles:
-			print(path)
-			self.assertTrue(path.exists())
-
-		self.assertEqual(externals, {'externalLib': {'project'}, 'externalFromC': {'libraryB'}})
+# class TestRelink(TestWithDataDir):
+#
+# 	# TODO Get rid of data: recreate files on test start
+#
+# 	def testRelinkPython(self):
+# 		libSearchDir = self.dataPythonDir / "libs"
+# 		projDir = self.dataPythonDir / "proj"
+# 		libLinksDir = projDir  # self.testDir/"proj"/PKGSBN
+#
+# 		unlinkAll(libLinksDir)
+#
+# 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
+# 						 {"stub.py", "depz.txt"})
+#
+# 		externals = rescan(projDir, relink=True, mode=Mode.default)
+#
+# 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
+# 						 {"stub.py", "depz.txt", 'lib3', 'lib2', 'lib1'})
+#
+# 		self.assertEqual(externals, {'numpy': {'proj'}, 'requests': {'lib1'}})
+#
+# 	def testRelinkFlutter(self):
+# 		projectDir = self.dataFlutterDir / "project"
+#
+# 		expectedFiles = [
+# 			projectDir / "lib" / "libraryA" / "code1.dart",
+# 			projectDir / "lib" / "libraryA" / "code2.dart",
+# 			projectDir / "lib" / "libraryB" / "code3.dart",
+# 			projectDir / "lib" / "libraryC" / "something.dart",
+# 			projectDir / "test" / "libraryA" / "testA.dart",
+# 			projectDir / "test" / "libraryB" / "testB.dart",
+# 		]
+#
+# 		unlinkAll(projectDir / "lib")
+# 		unlinkAll(projectDir / "test")
+#
+# 		self.assertTrue(all(not path.exists() for path in expectedFiles))
+#
+# 		externals = rescan(projectDir, relink=True, mode=Mode.layout)
+#
+# 		for path in expectedFiles:
+# 			print(path)
+# 			self.assertTrue(path.exists())
+#
+# 		self.assertEqual(externals, {'externalLib': {'project'}, 'externalFromC': {'libraryB'}})

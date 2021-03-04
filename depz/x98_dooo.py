@@ -7,14 +7,14 @@ from depz.x01_testsBase import TestWithDataDir
 from depz.x80_rescanRelink import rescan
 
 
-def isFlutterDir(path: Path) -> bool:
-	return (path / "pubspec.yaml").exists()
-
-
-class TestIsFlutter(TestWithDataDir):
-	def test(self):
-		self.assertTrue(isFlutterDir(self.dataFlutterDir / "project"))
-		self.assertFalse(isFlutterDir(self.dataFlutterDir))  # парадокс :)
+# def isFlutterDir(path: Path) -> bool:
+# 	return (path / "pubspec.yaml").exists()
+#
+#
+# class TestIsFlutter(TestWithDataDir):
+# 	def test(self):
+# 		self.assertTrue(isFlutterDir(self.dataFlutterDir / "project"))
+# 		self.assertFalse(isFlutterDir(self.dataFlutterDir))  # парадокс :)
 
 
 def pipInstallCommand(libs: Dict[str, Set[str]]) -> Optional[str]:
@@ -43,10 +43,10 @@ def doo(projectPath: Path,
 
 	externalLibs = rescan(projectPath, relink=symlinkLocalDeps, mode=mode)
 
-	if isFlutterDir(projectPath):
-		for libName, referreringPydpns in externalLibs.items():
-			print(f"{libName}: any # referred from {', '.join(referreringPydpns)}")
-		return
+	# if isFlutterDir(projectPath):
+	# 	for libName, referreringPydpns in externalLibs.items():
+	# 		print(f"{libName}: any # referred from {', '.join(referreringPydpns)}")
+	# 	return
 
 	if updateReqsFile:
 		if mode == Mode.default:
