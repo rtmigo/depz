@@ -60,7 +60,7 @@ $ pip3 install depz --upgrade
 
 # Specify dependencies
 
-File `aaa/depz.txt` lists dependencies for `aaa`:
+File `xxx/depz.txt` lists dependencies for `xxx`:
 - `/abc/myproject/depz.txt` for `myproject`
 - `/abc/libs/mylib/depz.txt` for `mylib`
 
