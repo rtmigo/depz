@@ -29,9 +29,10 @@ def isPipenvDir(path: Path):
 	return (path / "Pipfile").exists()
 
 
-def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
+def doo(projectPath: Path,
+		installExternalDeps: bool = False, updateReqsFile: bool = False,
 		symlinkLocalDeps: bool = False):
-	projectPath = Path(".")
+	#	projectPath = Path(".")
 
 	print(f"Project dir: {projectPath.absolute()}")
 

@@ -6,7 +6,7 @@ from collections import deque, defaultdict
 from pathlib import Path
 from typing import *
 
-from depz.x00_common import Mode
+from depz.x00_common import Mode, printVerbose
 from depz.x01_testsBase import TestWithDataDir
 from depz.x50_resolve import resolvePath
 from depz.x50_unlink import unlinkAll
@@ -42,6 +42,10 @@ def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool):
 		raise FileNotFoundError(f"realPath path {realPath} does not exist")
 	if not linkPath.parent.exists():
 		raise FileNotFoundError(f"The parent dir of destination linkPath {linkPath} does not exist")
+
+	printVerbose("Creating symlink:")
+	printVerbose(f"  src: {realPath.absolute()}")
+	printVerbose(f"  dst: {linkPath.absolute()}")
 	linkPath.symlink_to(realPath, target_is_directory=targetIsDirectory)
 
 
@@ -50,7 +54,9 @@ def symlinkPython(srcLibDir: Path, dstPythonpathDir: Path):
 
 	name = pathToLibname(srcLibDir)
 	symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
-	print(f'Created symlink "{name}" -> "{srcLibDir}"')
+
+
+# print(f'Created symlink "{name}" -> "{srcLibDir}"')
 
 
 # def symlinkFlutter(srcLibDir: Path, dstProjectDir: Path):
@@ -132,7 +138,7 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 
 		for lnkdpnFile in pydpnFiles(currDir):
 
-			print(f"Scanning {lnkdpnFile}")
+			printVerbose(f"Depz file: {lnkdpnFile}")
 
 			for line in iterLnkdpnLines(lnkdpnFile):
 
@@ -164,6 +170,8 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 
 		# isFlutter = isFlutterDir(projectDir)
 
+		# print("localLibs:", localLibs)
+
 		for path in localLibs:
 			if mode == Mode.layout:
 				symlinkLayout(path, pkgsDir)
@@ -176,6 +184,8 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 
 
 class TestRelink(TestWithDataDir):
+
+	# TODO Get rid of data: recreate files on test start
 
 	def testRelinkPython(self):
 		libSearchDir = self.dataPythonDir / "libs"

@@ -6,3 +6,6 @@ cd "$scriptParentDir"
 
 python3 -m unittest discover -t . -s "depz" -p "*.py"
 
+# to run tests on particular file:
+# python3 -m unittest discover -t . -s "depz" -p filename.py
+

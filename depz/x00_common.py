@@ -8,3 +8,7 @@ from enum import IntEnum, auto
 class Mode(IntEnum):
 	default = auto()
 	layout = auto()
+
+
+def printVerbose(text: str):
+	print(text)

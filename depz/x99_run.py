@@ -1,8 +1,10 @@
 # SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-from depz.x98_dooo import doo
+import sys
+from pathlib import Path
 
+from depz.x98_dooo import doo, List
 
 helptxt = """
 
@@ -39,10 +41,14 @@ Exact behavior is specified by the program arguments.
 
 """
 
-def runmain():
+
+def runmain(programArgs: List[str]):
 	import argparse
 
 	parser = argparse.ArgumentParser(usage=helptxt)
+
+	parser.add_argument("-p", "--project", type=str, default=".",
+						help='The project directory path. Defaults to the current directory (".")')
 
 	parser.add_argument("-d", "--default", action="store_true",
 						help="shorthand for --relink --install")
@@ -53,12 +59,13 @@ def runmain():
 	parser.add_argument("--pyreq", action="store_true",
 						help="write external dependences list into requirements.txt")
 
-	args = parser.parse_args()
+	args = parser.parse_args(programArgs)
 
-	doo(updateReqsFile=args.pyreq,
+	doo(Path(args.project),
+		updateReqsFile=args.pyreq,
 		installExternalDeps=args.pypip or args.default,
 		symlinkLocalDeps=args.relink or args.default)
 
 
 if __name__ == "__main__":
-	runmain()
+	runmain(sys.argv[1:])
