@@ -133,10 +133,12 @@ class TestsWithPythonLayout(Tests):
 	]
 
 	def test_relink_default(self):
-		runmain(["--project", str(self.tempDir / "project"), "--relink"])
 		with CapturedOutput() as output:
-			result = listDir((self.tempDir / "project"))
+			runmain(["--project", str(self.tempDir / "project"), "--relink"])
+
+		result = listDir((self.tempDir / "project"))
 		self.assertListEqual(result, self.expectedPythonAfterLink)
+		self.assertTrue("Creating symlink" in output.std)
 
 	def _run_relink_current_dir(self):
 		runmain(["--relink"])
