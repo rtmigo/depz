@@ -8,7 +8,7 @@
 
 Command line tool for symlinking directories with reusable code into the working project.
 
-Language-agnostic. Tested with Python and Flutter.
+Language-agnostic. With Python and Flutter specific extensions.
 
 # Motivation
 
@@ -80,5 +80,7 @@ links will always reside in the project dir. For example, when running in `/abc/
 
 ```bash
 $ cd /abc/myproject
-$ depz link
+$ depz
 ```
+
+This scans `/abc/myproject/depz.txt` and unpdates symlinks inside `/abc/myproject`. 
