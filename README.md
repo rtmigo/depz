@@ -1,6 +1,6 @@
 # [depz](https://github.com/rtmigo/depz)
 
-[![Generic badge](https://img.shields.io/badge/ready_for_use-maybe-orange.svg)](#)
+[![Generic badge](https://img.shields.io/badge/ready_for_use-no-red.svg)](#)
 [![PyPI version shields.io](https://img.shields.io/pypi/v/depz.svg)](https://pypi.python.org/pypi/depz/)
 [![Actions Status](https://github.com/rtmigo/depz/workflows/CI/badge.svg?branch=master)](https://github.com/rtmigo/depz/actions)
 [![Generic badge](https://img.shields.io/badge/CI_OS-MacOS,_Ubuntu-blue.svg)](#)
