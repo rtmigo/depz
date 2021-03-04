@@ -95,13 +95,6 @@ $ depz --relink
 
 Removes all the symlinks found in `/abc/myproject`. Adds new symlinks to the local dependencies. Prints external dependencies.
  
----------
-
-```bash
-$ depz --help
-```
-
-Shows additional command-line options.
 
 # Local dependencies
 
