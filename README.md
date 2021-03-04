@@ -37,6 +37,12 @@ The answer is `depz`. It reduces these tasks to a one-line command.
 $ pip3 install depz
 ```
 
+Make sure that it is installed:
+
+```bash
+$ depz --help
+```
+
 # Use
 
 - Specify dependencies in `depz.txt`
