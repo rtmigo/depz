@@ -1,12 +1,15 @@
 # SPDX-FileCopyrightText: (c) 2021 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-
+from __future__ import annotations
+import contextlib
 import os
+import sys
 import unittest
+from io import StringIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import List, Iterator
+from typing import List, Iterator, Tuple
 
 from depz import runmain
 
@@ -124,6 +127,21 @@ class TestsWithPythonLayout(Tests):
 		self._run_relink_current_dir()
 
 
+# def test_externals_line(self):
+#
+# 	temp_stdout = StringIO()
+# 	with contextlib.redirect_stdout(temp_stdout):
+# 		runmain(["--project", str(self.tempDir / "project"), "--relink"])
+# 		#foo()
+# 	output = temp_stdout.getvalue().strip()
+# 	assert output == 'hello world!'
+# 	with captured_output() as (std,err):
+# 	self.assertEqual(std, ":)")
+
+
+#			pass
+
+
 class TestsWithFluterLayout(Tests):
 
 	def createLayout(self):
@@ -181,3 +199,40 @@ class TestsWithFluterLayout(Tests):
 		from pprint import pprint
 
 		self.assertListEqual(result, self.expectedAfterLink)
+
+
+class CapturedOutput:
+	def __init__(self):
+		self._new_out = StringIO()
+		self._new_err = StringIO()
+
+	def __enter__(self) -> CapturedOutput:
+		self._old_stdout = sys.stdout
+		self._old_stderr = sys.stderr
+		sys.stdout = self._new_out
+		sys.stderr = self._new_err
+		return self
+
+	def __exit__(self, exc_type, exc_val, exc_tb):
+		sys.stdout = self._old_stdout
+		sys.stderr = self._old_stderr
+
+	@property
+	def std(self) -> str:
+		return self._new_out.getvalue()
+
+	@property
+	def err(self) -> str:
+		return self._new_err.getvalue()
+
+
+class TestsInfo(unittest.TestCase):
+	def test_help(self):
+		with CapturedOutput() as output:
+			with self.assertRaises(SystemExit) as cm:
+				runmain(["--help"])
+
+		self.assertEqual(cm.exception.code, 0)
+
+		self.assertTrue("arguments" in output.std)
+		self.assertEqual(output.err, "")
