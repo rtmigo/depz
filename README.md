@@ -30,7 +30,13 @@ and `mylib` while working on `myproject`.
 - **Portability**. To make the symlinks easy to recreate on another system
 - **Recursive dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
 
-# Usage
+# Install
+
+```bash
+$ pip3 install depz
+```
+
+# Use
 
 - Specify dependencies in `depz.txt`
 - Run the command `depz`
