@@ -109,13 +109,26 @@ Useful for frameworks with strict directory structure.
 $ cd /abc/myproject
 $ depz
 ```
+or
+```bash
+$ depz --project /abc/myproject
+```
 
-Recursively scans `/abc/myproject/depz.txt` and updates symlinks inside `/abc/myproject`. 
+Recursively scans `/abc/myproject/depz.txt` and prints all the found dependencies. Does not change anything in the filesystem. 
 
+---------
+
+```bash
+$ cd /abc/myproject
+$ depz --relink
+```
+
+Removes all the symlinks found in `/abc/myproject`. Adds new symlinks to the local dependencies. Prints external dependencies.
+ 
 ---------
 
 ```bash
 $ depz --help
 ```
 
-Shows command-line options.
+Shows additional command-line options.
