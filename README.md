@@ -126,14 +126,13 @@ The following examples show how the directories will be linked when running `dep
 
 #### With `--mode=layout`
 
-Useful for frameworks with strict directory structure suach as Flutter.
-
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
 | /abc/project/depz.txt | /abc/libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
 | /abc/project/depz.txt | ../libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
 | /abc/libs/xxx/depz.txt | ../zzz|/abc/libs/zzz/src<br/>/abc/libs/zzz/test|/abc/project/src/zzz<br/>/abc/project/test/zzz |
 
+This is useful for frameworks with strict directory structure such as Flutter.
 
 # External dependencies
 
