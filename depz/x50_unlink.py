@@ -1,7 +1,9 @@
-import os
+# SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
+# SPDX-License-Identifier: BSD-3-Clause
+
 from pathlib import Path
 
-from depz.testsBase import TestWithTempDir
+from depz.x01_testsBase import TestWithTempDir
 
 
 def unlinkAll(parent: Path):
@@ -10,10 +12,11 @@ def unlinkAll(parent: Path):
 		if child.is_symlink():
 			child.unlink()
 
+
 class TestUnlink(TestWithTempDir):
 	def test(self):
 
-		tempSubdir = (self.tempDir /"subdir"/ "iLikeToBeLinkedTo").absolute()
+		tempSubdir = (self.tempDir / "subdir" / "iLikeToBeLinkedTo").absolute()
 		tempSubdir.mkdir(exist_ok=True, parents=True)
 
 		link1 = (self.tempDir / "link1").absolute()
@@ -32,4 +35,3 @@ class TestUnlink(TestWithTempDir):
 
 		self.assertFalse(link1.exists())
 		self.assertFalse(link2.exists())
-

@@ -2,11 +2,10 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import os
-import unittest
 from pathlib import Path
 from typing import Optional
 
-from depz.testsBase import TestWithTempDir
+from depz.x01_testsBase import TestWithTempDir
 
 
 def resolvePath(rootDir: Path, packageDir: str) -> Optional[Path]:

@@ -1,29 +1,15 @@
 # SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-from depz.resolve import resolvePath
-from depz.testsBase import TestWithTempDir
-from depz.unlink import unlinkAll
-from depz.x00_common import Mode
 
-
-
-from typing import *
 from collections import deque, defaultdict
-import unittest, os
 from pathlib import Path
+from typing import *
 
-
-
-
-
-
-def isFlutterDir(path: Path) -> bool:
-	return (path / "pubspec.yaml").exists()
-
-
-def isPipenvDir(path: Path):
-	return (path / "Pipfile").exists()
+from depz.x00_common import Mode
+from depz.x01_testsBase import TestWithDataDir
+from depz.x50_resolve import resolvePath
+from depz.x50_unlink import unlinkAll
 
 
 def pathToLibname(path: Path) -> str:
@@ -43,17 +29,16 @@ def _debugIterParents(p: Path) -> Iterator[Path]:
 		yield Path(*parts[:l])
 
 
-def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool, ifRealExists=False):
-	# Path.symlink_to can throw a FileNotFound error without making it clear whether it is link
-	# source or link target
+def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool):
+	"""Creates a symlink. Throws more detailed exceptions, than Path.
+
+	Path.symlink_to can throw a FileNotFound error without making it clear what is missing:
+	source or target.
+	"""
 
 	if not realPath.exists():
-		if ifRealExists:
-			return
-
 		for par in _debugIterParents(realPath):
 			print(par, par.exists())
-
 		raise FileNotFoundError(f"realPath path {realPath} does not exist")
 	if not linkPath.parent.exists():
 		raise FileNotFoundError(f"The parent dir of destination linkPath {linkPath} does not exist")
@@ -64,9 +49,7 @@ def symlinkPython(srcLibDir: Path, dstPythonpathDir: Path):
 	# создает в каталоге dstPythonpathDir ссылку на библиотеку, расположенную в srcLibDir
 
 	name = pathToLibname(srcLibDir)
-	# symlinkVerbose()
 	symlinkVerbose(srcLibDir, dstPythonpathDir / name, targetIsDirectory=True)
-	# (dstPythonpathDir / name).symlink_to(srcLibDir, target_is_directory=True)
 	print(f'Created symlink "{name}" -> "{srcLibDir}"')
 
 
@@ -77,9 +60,11 @@ def symlinkFlutter(srcLibDir: Path, dstProjectDir: Path):
 
 	symlinkVerbose((srcLibDir / "lib").absolute(), dstProjectDir / "lib" / name,
 				   targetIsDirectory=True)
-	symlinkVerbose((srcLibDir / "test").absolute(), dstProjectDir / "test" / name,
-				   targetIsDirectory=True, ifRealExists=True)
 
+	srcTestDir = (srcLibDir / "test").absolute()
+	if srcTestDir.exists():
+		symlinkVerbose(srcTestDir, dstProjectDir / "test" / name,
+					   targetIsDirectory=True)
 
 
 def pydpnFiles(dirPath: Path) -> Iterable[Path]:
@@ -101,7 +86,7 @@ def iterLnkdpnLines(file: Path) -> Iterator[str]:
 			yield line
 
 
-def rescan(projectDir: Path, relink: bool) -> Dict[str, Set[str]]:
+def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 	# сканирует файл depz.txt в каталоге проекта, а также, следуя по ссылкам на другие локальные
 	# библиотеки - все файлы pydpn.txt в тех библиотеках.
 	#
@@ -148,47 +133,27 @@ def rescan(projectDir: Path, relink: bool) -> Dict[str, Set[str]]:
 		pkgsDir = projectDir  # /PKGSBN
 		pkgsDir.mkdir(exist_ok=True)
 		unlinkAll(pkgsDir)
-		if isFlutterDir(pkgsDir):
+		if mode == Mode.flutter:
+			# if isFlutterDir(pkgsDir):
 			unlinkAll(pkgsDir / "lib")
 			unlinkAll(pkgsDir / "test")
 
-		isFlutter = isFlutterDir(projectDir)
+		# isFlutter = isFlutterDir(projectDir)
 
 		for path in localLibs:
-			if isFlutter:
+			if mode == Mode.flutter:
 				symlinkFlutter(path, pkgsDir)
 			else:
 				symlinkPython(path, pkgsDir)
-	# name = pathToLibname(path)
-	# (pkgsDir/name).symlink_to(path, target_is_directory=True)
-	# print(f'Linked "{name}" from "{path}"')
 
 	# возвращаю то, что не было ссылками на локальные проекты: т.е. внешние зависимости
 
 	return externalLibs
 
 
-class Test(unittest.TestCase):
-
-	@property
-	def dataDir(self) -> Path:
-		d = Path(__file__).parent / "test" / "data"
-		if not d.exists():
-			raise FileNotFoundError(d)
-		return d
-
-	@property
-	def dataPythonDir(self) -> Path:
-		return self.dataDir / "python"
-
-	@property
-	def dataFlutterDir(self) -> Path:
-		return self.dataDir / "flutter"
-
-
+class TestRelink(TestWithDataDir):
 
 	def testRelinkPython(self):
-
 		libSearchDir = self.dataPythonDir / "libs"
 		projDir = self.dataPythonDir / "proj"
 		libLinksDir = projDir  # self.testDir/"proj"/PKGSBN
@@ -198,7 +163,7 @@ class Test(unittest.TestCase):
 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
 						 {"stub.py", "depz.txt"})
 
-		externals = rescan(projDir, relink=True)
+		externals = rescan(projDir, relink=True, mode=Mode.python)
 
 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
 						 {"stub.py", "depz.txt", 'lib3', 'lib2', 'lib1'})
@@ -206,10 +171,6 @@ class Test(unittest.TestCase):
 		self.assertEqual(externals, {'numpy': {'proj'}, 'requests': {'lib1'}})
 
 	def testRelinkFlutter(self):
-
-		self.assertTrue(isFlutterDir(self.dataFlutterDir / "project"))
-		self.assertFalse(isFlutterDir(self.dataFlutterDir))  # парадокс :)
-
 		projectDir = self.dataFlutterDir / "project"
 
 		expectedFiles = [
@@ -226,74 +187,10 @@ class Test(unittest.TestCase):
 
 		self.assertTrue(all(not path.exists() for path in expectedFiles))
 
-		externals = rescan(projectDir, relink=True)
+		externals = rescan(projectDir, relink=True, mode=Mode.flutter)
 
 		for path in expectedFiles:
 			print(path)
 			self.assertTrue(path.exists())
 
-		# print("ext", externals)
-
 		self.assertEqual(externals, {'externalLib': {'project'}, 'externalFromC': {'libraryB'}})
-
-
-def pipInstallCommand(libs: Dict[str, Set[str]]) -> Optional[str]:
-	if len(libs) <= 0:
-		print("No external dependences.")
-		return None
-
-	return "pip install " + " ".join(libs)
-
-
-
-def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
-		symlinkLocalDeps: bool = False):
-
-	projectPath = Path(".")
-
-	print(f"Project dir: {projectPath.absolute()}")
-
-	mode: Mode = Mode.python
-	if isFlutterDir(projectPath):
-		mode = Mode.flutter
-
-	externalLibs = rescan(projectPath, relink=symlinkLocalDeps)
-
-	if isFlutterDir(projectPath):
-		for libName, referreringPydpns in externalLibs.items():
-			print(f"{libName}: any # referred from {', '.join(referreringPydpns)}")
-		return
-
-	if updateReqsFile:
-		if mode == Mode.python:
-			(projectPath / "requirements.txt").write_text("\n".join(externalLibs))
-			print(f"requirements.txt updated ({len(externalLibs)} lines)")
-			print("To install external dependencies, run:")
-			print("  pip -r requirements.txt")
-		else:
-			raise ValueError
-
-	if installExternalDeps:
-		if mode == Mode.python:
-			cmd = pipInstallCommand(externalLibs)
-			print(f"Running [{cmd}]")
-			os.system(cmd)
-		else:
-			raise ValueError
-
-	# not creating a file, not installing => printing
-
-	if not updateReqsFile and not installExternalDeps:
-		if mode == Mode.python:
-			cmd = pipInstallCommand(externalLibs)
-			if cmd:
-				print("To install external dependencies, run:")
-				print("  " + pipInstallCommand(externalLibs))
-		elif mode == Mode.flutter:
-			for libName, referreringPydpns in externalLibs.items():
-				print(f"{libName}: any # referred from {', '.join(referreringPydpns)}")
-		else:
-			raise ValueError
-
-
-

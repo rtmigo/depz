@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-from depz.inter import doo
+from depz.x98_dooo import doo
 
 
 helptxt = """
