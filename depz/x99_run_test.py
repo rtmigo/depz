@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: (c) 2021 Art Galkin <ortemeo@gmail.com>
+# SPDX-License-Identifier: BSD-3-Clause
+
+
 import os
 import unittest
 from pathlib import Path
@@ -50,17 +54,22 @@ def createFile(path: Path, content: str = None):
 		path.touch()
 
 
-class TestsWithPythonLayout(unittest.TestCase):
-
+class Tests(unittest.TestCase):
 	def setUp(self) -> None:
 		self.td = TemporaryDirectory()
 		self.tempDir = Path(self.td.name)
-		self.createPythonLayout()
+		self.createLayout()
 
 	def tearDown(self) -> None:
 		self.td.cleanup()
 
-	def createPythonLayout(self):
+	def createLayout(self):
+		raise NotImplementedError
+
+
+class TestsWithPythonLayout(Tests):
+
+	def createLayout(self):
 		createFile(self.tempDir / "project" / "stub.py")
 		createFile(self.tempDir / "project" / "depz.txt",
 				   """	# local
@@ -93,14 +102,22 @@ class TestsWithPythonLayout(unittest.TestCase):
 		result = listDir((self.tempDir / "project"))
 		self.assertListEqual(result, self.expectedPythonAfterLink)
 
-	def test_current_dir_as_project_dir(self):
-		# when project dir not specified, use the current dir
-
-		os.chdir(str(self.tempDir / "project"))  # changing current dir the project
+	def _run_relink_current_dir(self):
 		runmain(["--relink"])
 		result = listDir((self.tempDir / "project"))
 		self.assertListEqual(result, self.expectedPythonAfterLink)
 
+	def test_current_dir_as_project_dir(self):
+		# when project dir not specified, use the current dir
+
+		os.chdir(str(self.tempDir / "project"))  # changing current dir the project
+		self._run_relink_current_dir()
+
+	# runmain(["--relink"])
+	# result = listDir((self.tempDir / "project"))
+	# self.assertListEqual(result, self.expectedPythonAfterLink)
+
+	@unittest.expectedFailure
 	def test_project_dir_error(self):
 		# running in the wrong directory without specifying --project
 
@@ -108,7 +125,66 @@ class TestsWithPythonLayout(unittest.TestCase):
 		wrongDir.mkdir()
 		os.chdir(str(wrongDir))
 
-		runmain(["--relink"])
+		self._run_relink_current_dir()
+
+
+class TestsWithFluterLayout(Tests):
+
+	def createLayout(self):
+		(self.tempDir / "project" / "lib").mkdir(parents=True)
+		(self.tempDir / "project" / "test").mkdir(parents=True)
+
+		createFile(self.tempDir / "project" / "depz.txt",
+				   """
+					../libraryA_flutter
+					../libraryB
+					externalLib
+				   """)
+
+		createFile(self.tempDir / "project" / "pubspec.yaml")
+
+		createFile(self.tempDir / "libraryA_flutter" / "pubspec.yaml")  # must not be symlinked
+		createFile(self.tempDir / "libraryA_flutter" / "lib" / "code1.dart")
+		createFile(self.tempDir / "libraryA_flutter" / "lib" / "code2.dart")
+		createFile(self.tempDir / "libraryA_flutter" / "test" / "testA.dart")
+
+		createFile(self.tempDir / "libraryB" / "lib" / "code3.dart")
+		createFile(self.tempDir / "libraryB" / "test" / "testB.dart")
+		createFile(self.tempDir / "libraryB" / "pydpn.txt",
+				   """
+					   ../libraryC
+					   externalFromC
+				   """)
+
+		createFile(self.tempDir / "libraryC" / "lib" / "something.dart")
+		createFile(self.tempDir / "libraryC" / "data" / "binary.dat")
+
+	expectedAfterLink = ['data (D)',
+						 'data/libraryC (LD)',
+						 'data/libraryC/binary.dat (F)',
+						 'depz.txt (F)',
+						 'lib (D)',
+						 'lib/libraryA (LD)',
+						 'lib/libraryA/code1.dart (F)',
+						 'lib/libraryA/code2.dart (F)',
+						 'lib/libraryB (LD)',
+						 'lib/libraryB/code3.dart (F)',
+						 'lib/libraryC (LD)',
+						 'lib/libraryC/something.dart (F)',
+						 'pubspec.yaml (F)',
+						 'test (D)',
+						 'test/libraryA (LD)',
+						 'test/libraryA/testA.dart (F)',
+						 'test/libraryB (LD)',
+						 'test/libraryB/testB.dart (F)']
+
+	def test_relink_layout(self):
+		runmain(["--project", str(self.tempDir / "project"), "--relink", "--mode", "layout"])
 		result = listDir((self.tempDir / "project"))
-		# asserts the expected structure is NOT created
-		self.assertNotEqual(result, self.expectedPythonAfterLink)
+
+		from pprint import pprint
+
+		# print("!!!!")
+		# pprint(result)
+
+		self.assertListEqual(result, self.expectedAfterLink)

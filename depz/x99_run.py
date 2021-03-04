@@ -4,6 +4,7 @@
 import sys
 from pathlib import Path
 
+from depz.x00_common import Mode
 from depz.x98_dooo import doo, List
 
 helptxt = """
@@ -49,6 +50,8 @@ def runmain(programArgs: List[str]):
 
 	parser.add_argument("-p", "--project", type=str, default=".",
 						help='The project directory path. Defaults to the current directory (".")')
+	parser.add_argument("-m", "--mode", type=str, default="default", choices=["default", "layout"],
+						help='The link creation mode. See docs.')
 
 	parser.add_argument("-d", "--default", action="store_true",
 						help="shorthand for --relink --install")
@@ -61,10 +64,19 @@ def runmain(programArgs: List[str]):
 
 	args = parser.parse_args(programArgs)
 
+	mode: Mode
+	if args.mode == "default":
+		mode = Mode.default
+	elif args.mode == "layout":
+		mode = Mode.layout
+	else:
+		raise ValueError
+
 	doo(Path(args.project),
 		updateReqsFile=args.pyreq,
 		installExternalDeps=args.pypip or args.default,
-		symlinkLocalDeps=args.relink or args.default)
+		symlinkLocalDeps=args.relink or args.default,
+		mode=mode)
 
 
 if __name__ == "__main__":

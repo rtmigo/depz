@@ -31,14 +31,15 @@ def isPipenvDir(path: Path):
 
 def doo(projectPath: Path,
 		installExternalDeps: bool = False, updateReqsFile: bool = False,
-		symlinkLocalDeps: bool = False):
+		symlinkLocalDeps: bool = False,
+		mode: Mode = Mode.default):
 	#	projectPath = Path(".")
 
 	print(f"Project dir: {projectPath.absolute()}")
 
-	mode: Mode = Mode.default
-	if isFlutterDir(projectPath):
-		mode = Mode.layout
+	# mode: Mode = Mode.default
+	# if isFlutterDir(projectPath):
+	# 	mode = Mode.layout
 
 	externalLibs = rescan(projectPath, relink=symlinkLocalDeps, mode=mode)
 

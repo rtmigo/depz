@@ -29,7 +29,8 @@ def _debugIterParents(p: Path) -> Iterator[Path]:
 		yield Path(*parts[:l])
 
 
-def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool):
+def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool,
+				   createLinkParent: bool = False):
 	"""Creates a symlink. Throws more detailed exceptions, than Path.
 
 	Path.symlink_to can throw a FileNotFound error without making it clear what is missing:
@@ -40,7 +41,9 @@ def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool):
 		for par in _debugIterParents(realPath):
 			print(par, par.exists())
 		raise FileNotFoundError(f"realPath path {realPath} does not exist")
-	if not linkPath.parent.exists():
+	if createLinkParent:
+		linkPath.parent.mkdir(parents=True, exist_ok=True)
+	elif not linkPath.parent.exists():
 		raise FileNotFoundError(f"The parent dir of destination linkPath {linkPath} does not exist")
 
 	printVerbose("Creating symlink:")
@@ -88,7 +91,7 @@ def symlinkLayout(srcLibDir: Path, dstProjectDir: Path):
 	for item in srcLibDir.glob("*"):
 		if item.is_dir():
 			symlinkVerbose((srcLibDir / item.name).absolute(), dstProjectDir / item.name / libName,
-						   targetIsDirectory=True)
+						   targetIsDirectory=True, createLinkParent=True)
 
 
 # srcTestDir = (srcLibDir / "test").absolute()
