@@ -157,7 +157,7 @@ pandas numpy requests
 ```
 
 <details>
-  <summary>This can be useful for installing Python external depedencies</summary>
+  <summary>This can be useful for installing Python external depedencies</summary><br/>
 
 ```txt
 $ pip3 install $(depz -e line)
