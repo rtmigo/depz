@@ -48,7 +48,7 @@ $ depz --help
 - Specify dependencies in `depz.txt`
 - Run the command `depz`
 
-## Specify dependencies
+# Specify dependencies
 
 File `xxx/depz.txt` lists dependencies for `xxx`:
 - `/abc/myproject/depz.txt` for `myproject`
@@ -72,37 +72,7 @@ The `depz.txt` format:
 requests
 numpy
 ```
-### Local dependencies are recursive
 
-When a project depends on local `mylib`, it means, it also depends on all 
-the dependencies of `mylib`. So after scannig `myproject/depz.txt` we will also 
-scan `mylib/depz.txt` the same way.
-
-### Paths are relative to parent of depz.txt
-
-But resulting symlinks always go directly into the project dir.
-
-The following examples show how the direcroies will be linked when running `depz` for `/abc/project`:
-
-#### --mode=default
-
-| File  | Line | Resolves to | Creates symlink |
-|--------------------|------------|---------------|--------|
-|/abc/project/depz.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/project/xxx|
-|/abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
-|/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/project/zzz|
-
-#### --mode=layout
-
-Useful for frameworks with strict directory structure. 
-
-| File  | Line | Resolves to | Creates symlink |
-|--------------------|------------|---------------|--------|
-| /abc/project/depz.txt | /abc/libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
-| /abc/project/depz.txt | ../libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
-| /abc/libs/xxx/depz.txt | ../zzz|/abc/libs/zzz/src<br/>/abc/libs/zzz/test|/abc/project/src/zzz<br/>/abc/project/test/zzz |
-
- 
 # Run
 
 ```bash
@@ -133,6 +103,42 @@ $ depz --help
 
 Shows additional command-line options.
 
+# Local dependencies
+
+### They are recursive
+
+When a project depends on local `mylib`, it means, it also depends on all 
+the dependencies of `mylib`. So after scannig `myproject/depz.txt` we will also 
+scan `mylib/depz.txt` to include it's dependencies too.
+
+### Paths are relative to the current depz.txt
+
+When we scan `/abc/myproject/depz.txt`, the paths are relative to `/abc/myproject`. Then we found a link 
+to `mylib` and started scanning `/abc/mylib/depz.txt`. Now the paths are relative to `/abc/mylib/depz.txt`.  
+
+But all the symlinks will go directly into `/abc/myproject`.
+
+The following examples show how the direcroies will be linked when running `depz` for `/abc/project`:
+
+#### --mode=default
+
+| File  | Line | Resolves to | Creates symlink |
+|--------------------|------------|---------------|--------|
+|/abc/project/depz.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/project/xxx|
+|/abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
+|/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/project/zzz|
+
+#### --mode=layout
+
+Useful for frameworks with strict directory structure. 
+
+| File  | Line | Resolves to | Creates symlink |
+|--------------------|------------|---------------|--------|
+| /abc/project/depz.txt | /abc/libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
+| /abc/project/depz.txt | ../libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
+| /abc/libs/xxx/depz.txt | ../zzz|/abc/libs/zzz/src<br/>/abc/libs/zzz/test|/abc/project/src/zzz<br/>/abc/project/test/zzz |
+
+
 # External dependencies
 
 By default, a list of all external dependencies is simply printed to the terminal like that:
@@ -147,7 +153,7 @@ External dependencies: pandas numpy requests
 
 The `-e` argument causes the command to print only the list of dependencies.
 
-#### In one line:
+#### Print in one line:
 
 ```txt
 $ depz -e line
@@ -155,7 +161,7 @@ $ depz -e line
 pandas numpy requests
 ```
 
-Sample usage for installing Python external depedencies:
+This can be useful for installing Python external depedencies:
 ```txt
 $ pip3 install $(depz -e line)
 ```
@@ -166,7 +172,7 @@ $ pip3 install $(depz -e line --relink)
 ```
 
 
-#### One per line:
+#### Print one per line:
 ```txt
 $ depz -e multi
 
@@ -177,7 +183,6 @@ requests
 
 Sample usage for creating Python-compatible depedencies file:
 
-Sample usage:
 ```txt
 $ depz -e multi > requirements.txt
 ```
