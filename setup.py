@@ -43,8 +43,8 @@ setup(
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Typing :: Typed",
-    "Operating System :: OS Independent",
     "Topic :: Software Development :: Build Tools",
+    "Operating System :: POSIX"
   ],
 
   # test_suite='nose.collector',
