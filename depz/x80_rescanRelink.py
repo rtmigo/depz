@@ -7,7 +7,7 @@ from typing import *
 
 from depz.x00_common import Mode, printVerbose
 from depz.x50_resolve import resolvePath
-from depz.x50_unlink import unlinkAll
+from depz.x50_unlink import unlinkChildren, unlinkChildrenAndMaybeRemove
 
 
 def pathToLibname(path: Path) -> str:
@@ -99,16 +99,12 @@ def iterLnkdpnLines(file: Path) -> Iterator[str]:
 def removeLinks(projectDir: Path, mode: Mode):
 	# removing old links
 	projectDir.mkdir(exist_ok=True)
-	unlinkAll(projectDir)
+	unlinkChildren(projectDir)
 	if mode == Mode.layout:
 		for sub in projectDir.glob("*"):
 			if sub.is_dir():
-				unlinkAll(sub)
-			if len(list(sub.glob("*"))):
-				# seems dangerous: we're remove a directory!
-				# But since it is not a rmtree, the directory
-				# will only be removed it it's empty
-				os.rmdir(str(sub))
+				unlinkChildrenAndMaybeRemove(sub)
+
 
 def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 	# сканирует файл depz.txt в каталоге проекта, а также, следуя по ссылкам на другие локальные
