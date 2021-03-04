@@ -7,14 +7,14 @@
 [![Generic badge](https://img.shields.io/badge/CI_Python-3.7--3.9-blue.svg)](#)
 
 
-Command line tool for symlinking directories with reusable source code into the project.
+Command-line tool for symlinking directories with reusable source code into the project.
 
 Language-agnostic.
 
 # Why
 
 **Reusing code** should be simple. If I have the needed code in a **directory on a local drive**, 
-I just want to **include it** into the project. Without packaging it as a library 
+I just want to **include it** in the project. Without packaging it as a library 
 for distribution or messing with IDE settings.
 
 My first thought is to **create a symlink**:
@@ -24,10 +24,10 @@ $ ln -s /abc/libs/mylib /abc/project/mylib
 ```
 
 Now `project` sees `mylib` as a local directory `project/mylib`. I can edit both `project` 
-and `mylib` while working on `project`.
+and `mylib` while working on the `project`.
 
 But here problems arise:
-- **Portability**. How to make the symlinks easy to recreate on another system?
+- **Portability**. How do I make the symlinks easy to recreate on another system?
 - **Recursive local dependencies**. How to include not only `mylib`, but all the dependencies of `mylib`?
 
 The answer is `depz`. It reduces these tasks to a one-line command.
@@ -104,7 +104,7 @@ Removes all the symlinks found in `/abc/myproject`. Adds new symlinks to the loc
 ### They are recursive
 
 When a project depends on local `mylib`, it means, it also depends on all 
-the dependencies of `mylib`. So after scannig `myproject/depz.txt` we will also 
+the dependencies of `mylib`. So after scanning `myproject/depz.txt` we will also 
 scan `mylib/depz.txt` to include its dependencies too.
 
 ### Paths are relative to the current depz.txt
@@ -132,7 +132,7 @@ The following examples show how the directories will be linked when running `dep
 | /abc/project/depz.txt | ../libs/aaa|/abc/libs/bbb/src<br/>/abc/libs/bbb/test|/abc/project/src/bbb<br/>/abc/project/test/bbb |
 | /abc/libs/aaa/depz.txt | ../ccc|/abc/libs/ccc/src<br/>/abc/libs/ccc/test|/abc/project/src/ccc<br/>/abc/project/test/ccc |
 
-This is useful for frameworks with strict directory structure such as Flutter.
+This is useful for frameworks with strict directory structures such as Flutter.
 
 # External dependencies
 
@@ -157,7 +157,7 @@ pandas numpy requests
 ```
 
 <details>
-  <summary>[click to open] This can be useful for installing Python external depedencies</summary><br/>
+  <summary>[click to open] This can be useful for installing Python external dependencies</summary><br/>
 
 ```txt
 $ pip3 install $(depz -e line)
