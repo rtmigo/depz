@@ -181,7 +181,7 @@ requests
 ```
 
 <details>
-  <summary>Sample usage for creating requrements.txt for Python pip</summary>
+  <summary>Sample usage for creating requrements.txt for Python pip</summary><br/>
 
 
 ```txt
