@@ -23,7 +23,7 @@ def doo(projectPath: Path,
 
 	if outputMode == OutputMode.default:
 		if externalLibs:
-			printVerbose("External dependencies:" + (" ".join(externalLibs)))
+			printVerbose(f"External dependencies: {' '.join(externalLibs)}")
 		else:
 			printVerbose("No external dependencies.")
 	elif outputMode == OutputMode.one_line:
