@@ -172,7 +172,7 @@ numpy
 requests
 ```
 
-Sample usage for creating Python-compatible depedencies file:
+Sample usage for creating pip-compatible file:
 
 ```txt
 $ depz -e multi > requirements.txt
