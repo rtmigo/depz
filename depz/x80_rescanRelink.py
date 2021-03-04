@@ -53,18 +53,42 @@ def symlinkPython(srcLibDir: Path, dstPythonpathDir: Path):
 	print(f'Created symlink "{name}" -> "{srcLibDir}"')
 
 
-def symlinkFlutter(srcLibDir: Path, dstProjectDir: Path):
-	"""Creates symlinks from items inside srcLibDir to items inside dstProjectDir"""
+# def symlinkFlutter(srcLibDir: Path, dstProjectDir: Path):
+# 	"""Creates symlinks from items inside srcLibDir to items inside dstProjectDir"""
+#
+# 	name = pathToLibname(srcLibDir)
+#
+# 	symlinkVerbose((srcLibDir / "lib").absolute(), dstProjectDir / "lib" / name,
+# 				   targetIsDirectory=True)
+#
+# 	srcTestDir = (srcLibDir / "test").absolute()
+# 	if srcTestDir.exists():
+# 		symlinkVerbose(srcTestDir, dstProjectDir / "test" / name,
+# 					   targetIsDirectory=True)
 
-	name = pathToLibname(srcLibDir)
+def symlinkLayout(srcLibDir: Path, dstProjectDir: Path):
+	"""Creates symlinks from items inside srcLibDir to items inside dstProjectDir
 
-	symlinkVerbose((srcLibDir / "lib").absolute(), dstProjectDir / "lib" / name,
-				   targetIsDirectory=True)
+	libraryA/lib	-> project/lib/libraryA
+	libraryA/test	-> project/test/libraryA
 
-	srcTestDir = (srcLibDir / "test").absolute()
-	if srcTestDir.exists():
-		symlinkVerbose(srcTestDir, dstProjectDir / "test" / name,
-					   targetIsDirectory=True)
+	libraryB/lib	-> project/lib/libraryB
+	libraryB/test	-> project/test/libraryB
+
+	"""
+
+	libName = pathToLibname(srcLibDir)
+
+	for item in srcLibDir.glob("*"):
+		if item.is_dir():
+			symlinkVerbose((srcLibDir / item.name).absolute(), dstProjectDir / item.name / libName,
+						   targetIsDirectory=True)
+
+
+# srcTestDir = (srcLibDir / "test").absolute()
+# if srcTestDir.exists():
+# 	symlinkVerbose(srcTestDir, dstProjectDir / "test" / name,
+# 				   targetIsDirectory=True)
 
 
 def pydpnFiles(dirPath: Path) -> Iterable[Path]:
@@ -133,7 +157,7 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 		pkgsDir = projectDir  # /PKGSBN
 		pkgsDir.mkdir(exist_ok=True)
 		unlinkAll(pkgsDir)
-		if mode == Mode.flutter:
+		if mode == Mode.layout:
 			# if isFlutterDir(pkgsDir):
 			unlinkAll(pkgsDir / "lib")
 			unlinkAll(pkgsDir / "test")
@@ -141,8 +165,8 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 		# isFlutter = isFlutterDir(projectDir)
 
 		for path in localLibs:
-			if mode == Mode.flutter:
-				symlinkFlutter(path, pkgsDir)
+			if mode == Mode.layout:
+				symlinkLayout(path, pkgsDir)
 			else:
 				symlinkPython(path, pkgsDir)
 
@@ -163,7 +187,7 @@ class TestRelink(TestWithDataDir):
 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
 						 {"stub.py", "depz.txt"})
 
-		externals = rescan(projDir, relink=True, mode=Mode.python)
+		externals = rescan(projDir, relink=True, mode=Mode.default)
 
 		self.assertEqual({p.name for p in libLinksDir.glob("*") if not p.name.startswith('.')},
 						 {"stub.py", "depz.txt", 'lib3', 'lib2', 'lib1'})
@@ -187,7 +211,7 @@ class TestRelink(TestWithDataDir):
 
 		self.assertTrue(all(not path.exists() for path in expectedFiles))
 
-		externals = rescan(projectDir, relink=True, mode=Mode.flutter)
+		externals = rescan(projectDir, relink=True, mode=Mode.layout)
 
 		for path in expectedFiles:
 			print(path)

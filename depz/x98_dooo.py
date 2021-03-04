@@ -35,9 +35,9 @@ def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
 
 	print(f"Project dir: {projectPath.absolute()}")
 
-	mode: Mode = Mode.python
+	mode: Mode = Mode.default
 	if isFlutterDir(projectPath):
-		mode = Mode.flutter
+		mode = Mode.layout
 
 	externalLibs = rescan(projectPath, relink=symlinkLocalDeps, mode=mode)
 
@@ -47,7 +47,7 @@ def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
 		return
 
 	if updateReqsFile:
-		if mode == Mode.python:
+		if mode == Mode.default:
 			(projectPath / "requirements.txt").write_text("\n".join(externalLibs))
 			print(f"requirements.txt updated ({len(externalLibs)} lines)")
 			print("To install external dependencies, run:")
@@ -56,7 +56,7 @@ def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
 			raise ValueError
 
 	if installExternalDeps:
-		if mode == Mode.python:
+		if mode == Mode.default:
 			cmd = pipInstallCommand(externalLibs)
 			print(f"Running [{cmd}]")
 			os.system(cmd)
@@ -66,12 +66,12 @@ def doo(installExternalDeps: bool = False, updateReqsFile: bool = False,
 	# not creating a file, not installing => printing
 
 	if not updateReqsFile and not installExternalDeps:
-		if mode == Mode.python:
+		if mode == Mode.default:
 			cmd = pipInstallCommand(externalLibs)
 			if cmd:
 				print("To install external dependencies, run:")
 				print("  " + pipInstallCommand(externalLibs))
-		elif mode == Mode.flutter:
+		elif mode == Mode.layout:
 			for libName, referreringPydpns in externalLibs.items():
 				print(f"{libName}: any # referred from {', '.join(referreringPydpns)}")
 		else:

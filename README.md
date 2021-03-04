@@ -83,11 +83,22 @@ scan `mylib/depz.txt` the same way.
 But resulting 
 links will always reside in the project dir. For example, when running in `/abc/proj`:
 
+#### --mode=default
+
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
-|/abc/myproject/depz.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
-|/abc/myproject/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
-|/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/myproject/zzz|
+|/abc/project/depz.txt|/abc/libs/xxx|/abc/libs/xxx|/abc/project/xxx|
+|/abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
+|/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/project/zzz|
+
+#### --mode=layout
+
+| File  | Line | Resolves to | Creates symlink |
+|--------------------|------------|---------------|--------|
+| /abc/project/depz.txt|/abc/libs/xxx|/abc/libs/xxx/lib<br/>/abc/libs/xxx/test|/abc/project/lib/xxx<br/>/abc/project/test/xxx|
+| /abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
+| /abc/libs/xxx/depz.txt | ../zzz|/abc/libs/zzz|/abc/project/zzz|
+
  
 # Run
 
