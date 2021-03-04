@@ -111,7 +111,7 @@ But all the symlinks will go directly into `/abc/myproject`.
 
 The following examples show how the directories will be linked when running `depz` for `/abc/project`:
 
-#### Without --mode argument
+#### Without `--mode` argument
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
@@ -119,7 +119,7 @@ The following examples show how the directories will be linked when running `dep
 |/abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
 |/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/project/zzz|
 
-#### With --mode=layout
+#### With `--mode=layout`
 
 Useful for frameworks with strict directory structure. 
 
