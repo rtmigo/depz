@@ -111,7 +111,7 @@ But all the symlinks will go directly into `/abc/myproject`.
 
 The following examples show how the directories will be linked when running `depz` for `/abc/project`:
 
-#### Without `--mode` argument
+#### Default behaviour
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
