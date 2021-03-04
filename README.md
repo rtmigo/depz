@@ -79,12 +79,8 @@ numpy
 $ cd /abc/myproject
 $ depz
 ```
-or
-```bash
-$ depz --project /abc/myproject
-```
 
-Recursively scans `/abc/myproject/depz.txt` and prints all the found dependencies. Does not write anything. 
+This recursively scans `/abc/myproject/depz.txt` and prints all the found dependencies. Does not write anything. 
 
 ---------
 
