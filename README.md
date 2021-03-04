@@ -96,7 +96,7 @@ $ cd /abc/myproject
 $ depz --relink
 ```
 
-Removes all the symlinks found in `/abc/myproject`. Adds new symlinks to the local dependencies. Prints external dependencies.
+Removes all the symlinks found in `/abc/myproject`. Adds new symlinks to the local dependent directories. Prints external dependencies.
  
 
 # Local dependencies
