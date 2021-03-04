@@ -226,8 +226,14 @@ class TestsInfo(unittest.TestCase):
 		with CapturedOutput() as output:
 			with self.assertRaises(SystemExit) as cm:
 				runmain(["--help"])
-
 		self.assertEqual(cm.exception.code, 0)
-
 		self.assertTrue("arguments" in output.std)
+		self.assertEqual(output.err, "")
+
+	def test_version(self):
+		with CapturedOutput() as output:
+			with self.assertRaises(SystemExit) as cm:
+				runmain(["--version"])
+		self.assertEqual(cm.exception.code, 0)
+		self.assertTrue(output.std.startswith("DEPZ"))
 		self.assertEqual(output.err, "")

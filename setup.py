@@ -1,10 +1,13 @@
+from importlib.machinery import SourceFileLoader
 from pathlib import Path
 
 from setuptools import setup, find_packages
 
+ver = SourceFileLoader('ver', 'depz/x00_version.py').load_module()
+
 setup(
   name="depz",
-  version="0.0.2",
+  version=ver.__version__,
 
   author="Art Galkin",
   author_email="ortemeo@gmail.com",

@@ -1,9 +1,10 @@
 # SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import sys
+import sys, datetime as dt
 from pathlib import Path
 
+from depz import __version__
 from depz.x00_common import Mode, printVerbose
 from depz.x98_dooo import doo, List, OutputMode
 
@@ -39,14 +40,13 @@ External dependences are installed with tools like pip.
 
 Exact behavior is specified by the program arguments.
 
-
 """
 
 
 def runmain(programArgs: List[str]):
 	import argparse
 
-	parser = argparse.ArgumentParser(usage=helptxt)
+	parser = argparse.ArgumentParser()
 
 	parser.add_argument("-p", "--project", type=str, default=".",
 						help='The project directory path. Defaults to the current directory (".")')
@@ -59,13 +59,23 @@ def runmain(programArgs: List[str]):
 	# parser.add_argument("-d", "--default", action="store_true",
 	# 					help="shorthand for --relink --install")
 	parser.add_argument("--relink", action="store_true",
-						help="remove all symlinks from the project dir and create symlinks to local dependencies")
+						help="Remove all symlinks from the project dir and create symlinks to local dependencies")
+
+	parser.add_argument("--version", action="store_true",
+						help="Print version and exit")
+
 	# parser.add_argument("--pypip", action="store_true",
 	# 					help="install external Python dependencies with pip (run 'pip install')")
 	# parser.add_argument("--pyreq", action="store_true",
 	# 					help="write external dependences list into requirements.txt")
 
 	args = parser.parse_args(programArgs)
+
+	if args.version:
+		lastMod = dt.datetime.fromtimestamp(
+			(Path(__file__).parent / "x00_version.py").stat().st_mtime)
+		print(f"DEPZ {__version__} (c) 2020-{lastMod.year} Art Galkin <ortemeo@gmail.com>")
+		exit(0)
 
 	mode: Mode
 	if args.mode == "default":
@@ -74,8 +84,6 @@ def runmain(programArgs: List[str]):
 		mode = Mode.layout
 	else:
 		raise ValueError
-
-	# global pr
 
 	outputMode: OutputMode
 

@@ -13,18 +13,6 @@ class OutputMode(IntEnum):
 	multi_line = auto()
 
 
-def pipInstallCommand(libs: Dict[str, Set[str]]) -> Optional[str]:
-	if len(libs) <= 0:
-		printVerbose("No external dependencies.")
-		return None
-
-	return "pip install " + " ".join(libs)
-
-
-def isPipenvDir(path: Path):
-	return (path / "Pipfile").exists()
-
-
 def doo(projectPath: Path,
 		symlinkLocalDeps: bool = False,
 		mode: Mode = Mode.default,
@@ -34,7 +22,10 @@ def doo(projectPath: Path,
 	externalLibs = rescan(projectPath, relink=symlinkLocalDeps, mode=mode)
 
 	if outputMode == OutputMode.default:
-		print("External dependencies:", " ".join(externalLibs))
+		if externalLibs:
+			print("External dependencies:", " ".join(externalLibs))
+		else:
+			print("No external dependencies.")
 	elif outputMode == OutputMode.one_line:
 		print(" ".join(externalLibs))
 	elif outputMode == OutputMode.multi_line:
