@@ -126,7 +126,7 @@ The following examples show how the directories will be linked when running `dep
 
 #### With `--mode=layout`
 
-Useful for frameworks with strict directory structure. 
+Useful for frameworks with strict directory structure suach as Flutter.
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
