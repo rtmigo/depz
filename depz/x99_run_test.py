@@ -17,7 +17,7 @@ def rglobWithSymlinks(parent: Path, mask="*") -> Iterator[Path]:
 				yield sub
 
 
-def listDir(dir: Path):
+def listDir(dir: Path, withFileSizes=False):
 	result: List[str] = list()
 
 	for p in rglobWithSymlinks(dir):
@@ -29,7 +29,8 @@ def listDir(dir: Path):
 			kind += "D"
 		elif p.is_file():
 			kind += "F"
-			size = " " + str(p.lstat().st_size)
+			if withFileSizes:
+				size = " " + str(p.lstat().st_size)
 		else:
 			raise ValueError(f"Unexpected entry: {p} {p.lstat().st_mode}")
 
@@ -69,28 +70,20 @@ class TestRunMain(unittest.TestCase):
 		self.createFile(tempDir / "libs" / "lib2" / "__init__.py")
 		self.createFile(tempDir / "libs" / "lib3" / "__init__.py")
 
+	expectedPythonAfterLink = [
+		'depz.txt (F)',
+		'lib1 (LD)',
+		'lib1/depz.txt (F)',
+		'lib2 (LD)',
+		'lib2/__init__.py (F)',
+		'lib3 (LD)',
+		'lib3/__init__.py (F)',
+		'stub.py (F)']
+
 	def testDefault(self):
-
 		with TemporaryDirectory() as td:
-			# CREATING SOURCE LAYOUT
-
 			tempDir = Path(td)
-
 			self.createPythonLayout(tempDir)
 			runmain(["--project", str(tempDir / "project"), "--relink"])
-
-			# COMPARING
-
 			result = listDir((tempDir / "project"))
-
-			expected = [
-				'depz.txt (F 92)',
-				'lib1 (LD)',
-				'lib1/depz.txt (F 33)',
-				'lib2 (LD)',
-				'lib2/__init__.py (F 0)',
-				'lib3 (LD)',
-				'lib3/__init__.py (F 0)',
-				'stub.py (F 0)']
-
-			self.assertListEqual(result, expected)
+			self.assertListEqual(result, self.expectedPythonAfterLink)
