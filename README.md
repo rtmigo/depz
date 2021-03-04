@@ -146,7 +146,7 @@ External dependencies: pandas numpy requests
 
 The `-e` argument causes the command to print only the list of dependencies.
 
-#### Print in one line:
+## Print in one line:
 
 ```txt
 $ depz -e line
@@ -165,7 +165,7 @@ $ pip3 install $(depz -e line --relink)
 ```
 
 
-#### Print one per line:
+## Print one per line:
 ```txt
 $ depz -e multi
 
