@@ -82,9 +82,9 @@ scan `mylib/depz.txt` the same way.
 
 But resulting symlinks always go directly into the project dir.
 
-The following examples show how the direcroies will be linked when running in `/abc/project`:
+The following examples show how the direcroies will be linked when running `depz` for `/abc/project`:
 
-#### --mode=default --project=/abc/project
+#### --mode=default
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
@@ -92,7 +92,7 @@ The following examples show how the direcroies will be linked when running in `/
 |/abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
 |/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/project/zzz|
 
-#### --mode=layout --project=/abc/project
+#### --mode=layout
 
 Useful for frameworks with strict directory structure. 
 
