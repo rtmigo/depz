@@ -1,3 +1,4 @@
+import os
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -80,10 +81,35 @@ class TestRunMain(unittest.TestCase):
 		'lib3/__init__.py (F)',
 		'stub.py (F)']
 
-	def testDefault(self):
+	def test_default_mode(self):
 		with TemporaryDirectory() as td:
 			tempDir = Path(td)
 			self.createPythonLayout(tempDir)
 			runmain(["--project", str(tempDir / "project"), "--relink"])
 			result = listDir((tempDir / "project"))
 			self.assertListEqual(result, self.expectedPythonAfterLink)
+
+	def test_current_dir_as_project_dir(self):
+		# when project dir not specified, use the current dir
+		with TemporaryDirectory() as td:
+			tempDir = Path(td)
+			self.createPythonLayout(tempDir)
+			os.chdir(str(tempDir / "project"))  # changing current dir the project
+			runmain(["--relink"])
+			result = listDir((tempDir / "project"))
+			self.assertListEqual(result, self.expectedPythonAfterLink)
+
+	def test_project_dir_error(self):
+		# running in the wrong directory without specifying --project
+		with TemporaryDirectory() as td:
+			tempDir = Path(td)
+			self.createPythonLayout(tempDir)
+
+			wrongDir = tempDir / "wrong"
+			wrongDir.mkdir()
+			os.chdir(str(wrongDir))
+
+			runmain(["--relink"])
+			result = listDir((tempDir / "project"))
+			# asserts the expected structure is NOT created
+			self.assertNotEqual(result, self.expectedPythonAfterLink)
