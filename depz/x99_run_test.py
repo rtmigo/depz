@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 from __future__ import annotations
-import contextlib
 import os
 import sys
 import unittest
@@ -125,21 +124,6 @@ class TestsWithPythonLayout(Tests):
 		os.chdir(str(wrongDir))
 
 		self._run_relink_current_dir()
-
-
-# def test_externals_line(self):
-#
-# 	temp_stdout = StringIO()
-# 	with contextlib.redirect_stdout(temp_stdout):
-# 		runmain(["--project", str(self.tempDir / "project"), "--relink"])
-# 		#foo()
-# 	output = temp_stdout.getvalue().strip()
-# 	assert output == 'hello world!'
-# 	with captured_output() as (std,err):
-# 	self.assertEqual(std, ":)")
-
-
-#			pass
 
 
 class TestsWithFluterLayout(Tests):
