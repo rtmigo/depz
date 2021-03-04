@@ -183,6 +183,7 @@ requests
 <details>
   <summary>Sample usage for creating requrements.txt for Python pip</summary>
 
+
 ```txt
 $ depz -e multi > requirements.txt
 ```
