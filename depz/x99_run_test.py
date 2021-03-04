@@ -42,34 +42,41 @@ def listDir(dir: Path, withFileSizes=False):
 	return result
 
 
-class TestRunMain(unittest.TestCase):
+def createFile(path: Path, content: str = None):
+	path.parent.mkdir(parents=True, exist_ok=True)
+	if content:
+		path.write_text(content)
+	else:
+		path.touch()
 
-	@staticmethod
-	def createFile(path: Path, content: str = None):
-		path.parent.mkdir(parents=True, exist_ok=True)
-		if content:
-			path.write_text(content)
-		else:
-			path.touch()
 
-	def createPythonLayout(self, tempDir: Path):
+class TestsWithPythonLayout(unittest.TestCase):
 
-		self.createFile(tempDir / "project" / "stub.py")
-		self.createFile(tempDir / "project" / "depz.txt",
-						"""	# local
-							../libs/lib1
-							../libs/lib2
-							# external
-							numpy 
-						""")
+	def setUp(self) -> None:
+		self.td = TemporaryDirectory()
+		self.tempDir = Path(self.td.name)
+		self.createPythonLayout()
 
-		self.createFile(tempDir / "libs" / "__init__.py")
-		self.createFile(tempDir / "libs" / "lib1" / "depz.txt",
-						"""	../lib3
-							requests
-						""")
-		self.createFile(tempDir / "libs" / "lib2" / "__init__.py")
-		self.createFile(tempDir / "libs" / "lib3" / "__init__.py")
+	def tearDown(self) -> None:
+		self.td.cleanup()
+
+	def createPythonLayout(self):
+		createFile(self.tempDir / "project" / "stub.py")
+		createFile(self.tempDir / "project" / "depz.txt",
+				   """	# local
+					   ../libs/lib1
+					   ../libs/lib2
+					   # external
+					   numpy 
+				   """)
+
+		createFile(self.tempDir / "libs" / "__init__.py")
+		createFile(self.tempDir / "libs" / "lib1" / "depz.txt",
+				   """	../lib3
+					   requests
+				   """)
+		createFile(self.tempDir / "libs" / "lib2" / "__init__.py")
+		createFile(self.tempDir / "libs" / "lib3" / "__init__.py")
 
 	expectedPythonAfterLink = [
 		'depz.txt (F)',
@@ -82,34 +89,26 @@ class TestRunMain(unittest.TestCase):
 		'stub.py (F)']
 
 	def test_default_mode(self):
-		with TemporaryDirectory() as td:
-			tempDir = Path(td)
-			self.createPythonLayout(tempDir)
-			runmain(["--project", str(tempDir / "project"), "--relink"])
-			result = listDir((tempDir / "project"))
-			self.assertListEqual(result, self.expectedPythonAfterLink)
+		runmain(["--project", str(self.tempDir / "project"), "--relink"])
+		result = listDir((self.tempDir / "project"))
+		self.assertListEqual(result, self.expectedPythonAfterLink)
 
 	def test_current_dir_as_project_dir(self):
 		# when project dir not specified, use the current dir
-		with TemporaryDirectory() as td:
-			tempDir = Path(td)
-			self.createPythonLayout(tempDir)
-			os.chdir(str(tempDir / "project"))  # changing current dir the project
-			runmain(["--relink"])
-			result = listDir((tempDir / "project"))
-			self.assertListEqual(result, self.expectedPythonAfterLink)
+
+		os.chdir(str(self.tempDir / "project"))  # changing current dir the project
+		runmain(["--relink"])
+		result = listDir((self.tempDir / "project"))
+		self.assertListEqual(result, self.expectedPythonAfterLink)
 
 	def test_project_dir_error(self):
 		# running in the wrong directory without specifying --project
-		with TemporaryDirectory() as td:
-			tempDir = Path(td)
-			self.createPythonLayout(tempDir)
 
-			wrongDir = tempDir / "wrong"
-			wrongDir.mkdir()
-			os.chdir(str(wrongDir))
+		wrongDir = self.tempDir / "wrong"
+		wrongDir.mkdir()
+		os.chdir(str(wrongDir))
 
-			runmain(["--relink"])
-			result = listDir((tempDir / "project"))
-			# asserts the expected structure is NOT created
-			self.assertNotEqual(result, self.expectedPythonAfterLink)
+		runmain(["--relink"])
+		result = listDir((self.tempDir / "project"))
+		# asserts the expected structure is NOT created
+		self.assertNotEqual(result, self.expectedPythonAfterLink)
