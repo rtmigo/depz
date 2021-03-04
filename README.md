@@ -33,7 +33,7 @@ The answer is `depz`. It reduces these tasks to a one-line command.
 
 # Install
 
-Get a working [Python](https://www.python.org/) ≥3.7 and [pip](https://pip.pypa.io/en/stable/installing/). Then:
+Get a working [Python](https://www.python.org/) ≥3.7 and [pip](https://pip.pypa.io/en/stable/installing/). You may also need a computer. Then:
 
 ```bash
 $ pip3 install depz
