@@ -1,12 +1,14 @@
 # SPDX-FileCopyrightText: (c) 2020 Art Galkin <ortemeo@gmail.com>
 # SPDX-License-Identifier: BSD-3-Clause
 
-import sys, datetime as dt
+import sys
+import datetime as dt
+from typing import *
 from pathlib import Path
 
 from depz import __version__
 from depz.x00_common import Mode, printVerbose
-from depz.x98_dooo import doo, List, OutputMode
+from depz.x98_dooo import doo, OutputMode
 
 helptxt = """
 

@@ -10,9 +10,6 @@ class Mode(IntEnum):
 	layout = auto()
 
 
-# currentOutputMode:OutputMode = OutputMode.default
-
-
 def printVerbose(text: str):
 	if printVerbose.allowed:
 		print(text)

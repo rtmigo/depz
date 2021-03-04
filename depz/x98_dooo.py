@@ -1,7 +1,5 @@
-import os
 from enum import IntEnum, auto
 from pathlib import Path
-from typing import *
 
 from depz.x00_common import Mode, printVerbose
 from depz.x80_rescanRelink import rescan
