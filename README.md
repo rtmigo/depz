@@ -3,7 +3,7 @@
 [![Generic badge](https://img.shields.io/badge/ready_for_use-no-red.svg)](#)
 [![Actions Status](https://github.com/rtmigo/depz/workflows/CI/badge.svg?branch=master)](https://github.com/rtmigo/depz/actions)
 [![Generic badge](https://img.shields.io/badge/CI_OS-MacOS,_Ubuntu-blue.svg)](#)
-[![Generic badge](https://img.shields.io/badge/CI_Python-3.8,_3.9-blue.svg)](#)
+[![Generic badge](https://img.shields.io/badge/CI_Python-3.7--3.9-blue.svg)](#)
 
 
 Command line tool for symlinking directories with reusable code into the working project.
@@ -12,7 +12,7 @@ Language-agnostic. With Python and Flutter specific extensions.
 
 # Motivation
 
-**Reusing code** should be simple. If I have the needed code in a **nearby directory**, 
+**Reusing code** should be simple. If I have the needed code in a **directory on a local drive**, 
 I just want to **include it** into the project. Without packaging it as a library 
 for distribution or messing with IDE settings.
 
