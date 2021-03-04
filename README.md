@@ -80,10 +80,11 @@ scan `mylib/depz.txt` the same way.
 
 ### Paths are relative to parent of depz.txt
 
-But resulting 
-links will always reside in the project dir. For example, when running in `/abc/proj`:
+But resulting symlinks always go directly into the project dir.
 
-#### --mode=default
+The following examples show how the direcroies will be linked when running in `/abc/project`:
+
+#### --mode=default --project=/abc/project
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
@@ -91,13 +92,15 @@ links will always reside in the project dir. For example, when running in `/abc/
 |/abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
 |/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/project/zzz|
 
-#### --mode=layout
+#### --mode=layout --project=/abc/project
+
+Useful for frameworks with strict directory structure. 
 
 | File  | Line | Resolves to | Creates symlink |
 |--------------------|------------|---------------|--------|
-| /abc/project/depz.txt|/abc/libs/xxx|/abc/libs/xxx/lib<br/>/abc/libs/xxx/test|/abc/project/lib/xxx<br/>/abc/project/test/xxx|
-| /abc/project/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/project/xxx|
-| /abc/libs/xxx/depz.txt | ../zzz|/abc/libs/zzz|/abc/project/zzz|
+| /abc/project/depz.txt | /abc/libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
+| /abc/project/depz.txt | ../libs/xxx|/abc/libs/xxx/src<br/>/abc/libs/xxx/test|/abc/project/src/xxx<br/>/abc/project/test/xxx |
+| /abc/libs/xxx/depz.txt | ../zzz|/abc/libs/zzz/src<br/>/abc/libs/zzz/test|/abc/project/src/zzz<br/>/abc/project/test/zzz |
 
  
 # Run
