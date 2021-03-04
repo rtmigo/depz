@@ -66,9 +66,6 @@ File `xxx/depz.txt` lists dependencies for `xxx`:
 
 The `depz.txt` format:
 ```sh
-
-# lines prefixed by hashes are ignored
-
 # lines that specify local directory 
 # names are LOCAL dependencies:
   
