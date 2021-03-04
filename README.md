@@ -180,8 +180,12 @@ numpy
 requests
 ```
 
+<details>
+  <summary>Sample usage for creating requrements.txt for Python pip</summary>
+
 Sample usage for creating pip-compatible file:
 
 ```txt
 $ depz -e multi > requirements.txt
 ```
+</details>
