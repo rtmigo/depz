@@ -26,7 +26,6 @@ def isPipenvDir(path: Path):
 
 
 def doo(projectPath: Path,
-		installExternalDeps: bool = False, updateReqsFile: bool = False,
 		symlinkLocalDeps: bool = False,
 		mode: Mode = Mode.default,
 		outputMode: OutputMode = OutputMode.default):
@@ -42,34 +41,3 @@ def doo(projectPath: Path,
 		print("\n".join(externalLibs))
 	else:
 		raise ValueError
-
-# if updateReqsFile:
-# 	if mode == Mode.default:
-# 		(projectPath / "requirements.txt").write_text("\n".join(externalLibs))
-# 		printVerbose(f"requirements.txt updated ({len(externalLibs)} lines)")
-# 		printVerbose("To install external dependencies, run:")
-# 		printVerbose("  pip -r requirements.txt")
-# 	else:
-# 		raise ValueError
-#
-# if installExternalDeps:
-# 	if mode == Mode.default:
-# 		cmd = pipInstallCommand(externalLibs)
-# 		printVerbose(f"Running [{cmd}]")
-# 		os.system(cmd)
-# 	else:
-# 		raise ValueError
-#
-# # not creating a file, not installing => printing
-#
-# if not updateReqsFile and not installExternalDeps:
-# 	if mode == Mode.default:
-# 		cmd = pipInstallCommand(externalLibs)
-# 		if cmd:
-# 			printVerbose("To install external dependencies, run:")
-# 			printVerbose("  " + pipInstallCommand(externalLibs))
-# 	elif mode == Mode.layout:
-# 		for libName, referreringPydpns in externalLibs.items():
-# 			printVerbose(f"{libName}: any # referred from {', '.join(referreringPydpns)}")
-# 	else:
-# 		raise ValueError

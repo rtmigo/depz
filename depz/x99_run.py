@@ -91,8 +91,6 @@ def runmain(programArgs: List[str]):
 		raise ValueError
 
 	doo(Path(args.project),
-		updateReqsFile=False,
-		installExternalDeps=False,
 		symlinkLocalDeps=True,
 		mode=mode, outputMode=outputMode)
 
