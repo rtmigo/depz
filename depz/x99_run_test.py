@@ -140,6 +140,7 @@ class TestsWithPythonLayout(Tests):
 		self.assertListEqual(result, self.expectedPythonAfterLink)
 		self.assertTrue("Creating symlink" in output.std)
 
+
 	def _run_relink_current_dir(self):
 		runmain(["--relink"])
 		result = listDir((self.tempDir / "project"))
@@ -182,6 +183,21 @@ class TestsWithPythonLayout(Tests):
 		# print(output.err)
 		self.assertListEqual(result, self.expectedUnchanged)
 		self.assertTrue("Supposed mapping:" in output.std)
+
+	def test_relink_twice(self):
+		runmain(["--project", str(self.tempDir / "project"), "--relink"])
+		# removing something
+		(self.tempDir / "project" / "lib2").unlink()
+		# creaing links again
+		with CapturedOutput() as output:
+			runmain(["--project", str(self.tempDir / "project"), "--relink"])
+		result = listDir((self.tempDir / "project"))
+		self.assertListEqual(result, self.expectedPythonAfterLink)
+		self.assertTrue("Creating symlink" in output.std)
+
+	def test_project_dir_does_not_exist(self):
+		with self.assertRaises(FileNotFoundError):
+			runmain(["--project", "labuda"])
 
 # print(output.std)
 # exit(1)

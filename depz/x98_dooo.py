@@ -16,6 +16,8 @@ def doo(projectPath: Path,
 		mode: Mode = Mode.default,
 		outputMode: OutputMode = OutputMode.default):
 	printVerbose(f"Project dir: {projectPath.absolute()}")
+	if not projectPath.exists():
+		raise FileNotFoundError(f"Directory {projectPath} does not exist.")
 
 	externalLibs = rescan(projectPath, relink=symlinkLocalDeps, mode=mode)
 
