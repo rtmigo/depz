@@ -5,6 +5,8 @@ from setuptools import setup, find_packages
 
 ver = SourceFileLoader('ver', 'depz/x00_version.py').load_module()
 
+# transform GitHub spoilers into markdown
+
 setup(
   name="depz",
   version=ver.__version__,
