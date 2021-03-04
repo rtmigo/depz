@@ -156,7 +156,9 @@ $ depz -e line
 pandas numpy requests
 ```
 
-This can be useful for installing Python external depedencies:
+<details>
+  <summary>This can be useful for installing Python external depedencies</summary>
+
 ```txt
 $ pip3 install $(depz -e line)
 ```
@@ -165,6 +167,8 @@ Or install external dependencies and symlink local ones:
 ```txt
 $ pip3 install $(depz -e line --relink)
 ```
+
+</details>
 
 
 ## Print one per line:
