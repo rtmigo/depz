@@ -134,7 +134,7 @@ Useful for frameworks with strict directory structure.
 
 # External dependencies
 
-By default, a list of all external dependencies is simply printed to the terminal like that:
+By default, the list of all external dependencies is simply printed to the terminal like that:
 
 ```txt
 $ depz
