@@ -132,3 +132,46 @@ $ depz --help
 ```
 
 Shows additional command-line options.
+
+# External dependencies
+
+By default, a list of all external dependencies is simply printed to the terminal like that:
+
+```txt
+$ depz
+```
+```txt
+Scanning /abc/myproject/depz.txt
+...
+External dependencies: pandas numpy requests
+```
+
+The `-e` argument causes the command to print only the list of dependencies.
+
+#### In one line splitted by spaces:
+
+```txt
+$ depz -e line
+```
+```
+pandas numpy requests
+```
+
+Sample usage:
+```txt
+$ pip3 install $(depz -e line)
+```
+
+#### One dependency per line:
+```txt
+$ depz -e multi
+```
+```
+pandas
+numpy
+requests
+```
+Sample usage:
+```txt
+$ depz -e multi > requrements.txt
+```

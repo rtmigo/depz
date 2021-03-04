@@ -4,8 +4,8 @@
 import sys
 from pathlib import Path
 
-from depz.x00_common import Mode
-from depz.x98_dooo import doo, List
+from depz.x00_common import Mode, printVerbose
+from depz.x98_dooo import doo, List, OutputMode
 
 helptxt = """
 
@@ -53,6 +53,9 @@ def runmain(programArgs: List[str]):
 	parser.add_argument("-m", "--mode", type=str, default="default", choices=["default", "layout"],
 						help='The link creation mode. See docs.')
 
+	parser.add_argument("-e", type=str, default="default", choices=["default", "line", "multi"],
+						help='When specified, only external dependencies will be printed to stdout.')
+
 	# parser.add_argument("-d", "--default", action="store_true",
 	# 					help="shorthand for --relink --install")
 	parser.add_argument("--relink", action="store_true",
@@ -72,11 +75,26 @@ def runmain(programArgs: List[str]):
 	else:
 		raise ValueError
 
+	# global pr
+
+	outputMode: OutputMode
+
+	if args.e == "default":
+		outputMode = OutputMode.default
+	elif args.e == "line":
+		printVerbose.allowed = False
+		outputMode = OutputMode.one_line
+	elif args.e == "multi":
+		printVerbose.allowed = False
+		outputMode = OutputMode.multi_line
+	else:
+		raise ValueError
+
 	doo(Path(args.project),
 		updateReqsFile=False,
 		installExternalDeps=False,
 		symlinkLocalDeps=True,
-		mode=mode)
+		mode=mode, outputMode=outputMode)
 
 
 if __name__ == "__main__":

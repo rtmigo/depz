@@ -13,6 +13,32 @@ from typing import List, Iterator, Tuple
 from depz import runmain
 
 
+class CapturedOutput:
+	# ? maybe replace with https://pypi.org/project/stream-redirect/
+	def __init__(self):
+		self._new_out = StringIO()
+		self._new_err = StringIO()
+
+	def __enter__(self) -> CapturedOutput:
+		self._old_stdout = sys.stdout
+		self._old_stderr = sys.stderr
+		sys.stdout = self._new_out
+		sys.stderr = self._new_err
+		return self
+
+	def __exit__(self, exc_type, exc_val, exc_tb):
+		sys.stdout = self._old_stdout
+		sys.stderr = self._old_stderr
+
+	@property
+	def std(self) -> str:
+		return self._new_out.getvalue()
+
+	@property
+	def err(self) -> str:
+		return self._new_err.getvalue()
+
+
 def rglobWithSymlinks(parent: Path, mask="*") -> Iterator[Path]:
 	# because in 2020 Path.rglob("*") does not follow symlinks
 	# https://bugs.python.org/issue33428
@@ -125,6 +151,16 @@ class TestsWithPythonLayout(Tests):
 
 		self._run_relink_current_dir()
 
+	def test_print_externals_one_line(self):
+		with CapturedOutput() as output:
+			runmain(["--project", str(self.tempDir / "project"), "--relink", "-e", "line"])
+		self.assertEqual(output.std.strip(), "numpy requests")
+
+	def test_print_externals_multi_lines(self):
+		with CapturedOutput() as output:
+			runmain(["--project", str(self.tempDir / "project"), "--relink", "-e", "multi"])
+		self.assertEqual(output.std.strip(), "numpy\nrequests")
+
 
 class TestsWithFluterLayout(Tests):
 
@@ -183,31 +219,6 @@ class TestsWithFluterLayout(Tests):
 		from pprint import pprint
 
 		self.assertListEqual(result, self.expectedAfterLink)
-
-
-class CapturedOutput:
-	def __init__(self):
-		self._new_out = StringIO()
-		self._new_err = StringIO()
-
-	def __enter__(self) -> CapturedOutput:
-		self._old_stdout = sys.stdout
-		self._old_stderr = sys.stderr
-		sys.stdout = self._new_out
-		sys.stderr = self._new_err
-		return self
-
-	def __exit__(self, exc_type, exc_val, exc_tb):
-		sys.stdout = self._old_stdout
-		sys.stderr = self._old_stderr
-
-	@property
-	def std(self) -> str:
-		return self._new_out.getvalue()
-
-	@property
-	def err(self) -> str:
-		return self._new_err.getvalue()
 
 
 class TestsInfo(unittest.TestCase):

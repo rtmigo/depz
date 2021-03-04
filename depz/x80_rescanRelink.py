@@ -39,7 +39,7 @@ def symlinkVerbose(realPath: Path, linkPath: Path, targetIsDirectory: bool,
 
 	if not realPath.exists():
 		for par in _debugIterParents(realPath):
-			print(par, par.exists())
+			printVerbose(par, par.exists())
 		raise FileNotFoundError(f"realPath path {realPath} does not exist")
 	if createLinkParent:
 		linkPath.parent.mkdir(parents=True, exist_ok=True)
@@ -151,7 +151,7 @@ def rescan(projectDir: Path, relink: bool, mode: Mode) -> Dict[str, Set[str]]:
 
 		# isFlutter = isFlutterDir(projectDir)
 
-		# print("localLibs:", localLibs)
+		# printVerbose("localLibs:", localLibs)
 
 		for path in localLibs:
 			if mode == Mode.layout:
