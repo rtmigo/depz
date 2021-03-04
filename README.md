@@ -110,7 +110,7 @@ scan `mylib/depz.txt` to include its dependencies too.
 ### Paths are relative to the current depz.txt
 
 When we scan `/abc/myproject/depz.txt`, the paths are relative to `/abc/myproject`. Then we found a link 
-to `mylib` and started scanning `/abc/mylib/depz.txt`. The paths found there are relative to `/abc/mylib/depz.txt`.  
+to `mylib` and started scanning `/abc/mylib/depz.txt`. The paths found there are relative to `/abc/mylib`.  
 
 But all the symlinks will go directly into `/abc/myproject`.
 
