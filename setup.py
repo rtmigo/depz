@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
   name="depz",
-  version="0.0.1.1",
+  version="0.0.2",
 
   author="Art Galkin",
   author_email="ortemeo@gmail.com",
@@ -13,7 +13,7 @@ setup(
   packages=find_packages(),
   install_requires=[],
 
-  description="Command line tool for symlinking directories with reusable code into the working project",
+  description="Command line tool for symlinking directories with reusable code into the project",
 
   long_description=(Path(__file__).parent / 'README.md').read_text(),
   long_description_content_type='text/markdown',
@@ -21,9 +21,9 @@ setup(
   license='BSD-3-Clause',
 
   entry_points={
-       'console_scripts': [
-            'depz = depz:runmain',
-        ]},
+    'console_scripts': [
+      'depz = depz:runmain',
+    ]},
 
   keywords="""
   	source-code dependencies filesystem programming
