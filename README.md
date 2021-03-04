@@ -139,7 +139,6 @@ By default, a list of all external dependencies is simply printed to the termina
 
 ```txt
 $ depz
---
 
 Scanning /abc/myproject/depz.txt
 ...
@@ -152,7 +151,6 @@ The `-e` argument causes the command to print only the list of dependencies.
 
 ```txt
 $ depz -e line
---
 
 pandas numpy requests
 ```
@@ -165,7 +163,6 @@ $ pip3 install $(depz -e line)
 #### One dependency per line:
 ```txt
 $ depz -e multi
---
 
 pandas
 numpy
