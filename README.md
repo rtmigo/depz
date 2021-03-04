@@ -173,5 +173,5 @@ Sample usage for creating Python-compatible depedencies file:
 
 Sample usage:
 ```txt
-$ depz -e multi > requrements.txt
+$ depz -e multi > requirements.txt
 ```
