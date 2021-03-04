@@ -105,7 +105,7 @@ Removes all the symlinks found in `/abc/myproject`. Adds new symlinks to the loc
 
 When a project depends on local `mylib`, it means, it also depends on all 
 the dependencies of `mylib`. So after scannig `myproject/depz.txt` we will also 
-scan `mylib/depz.txt` to include it's dependencies too.
+scan `mylib/depz.txt` to include its dependencies too.
 
 ### Paths are relative to the current depz.txt
 
