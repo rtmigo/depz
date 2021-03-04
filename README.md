@@ -87,7 +87,7 @@ $ cd /abc/myproject
 $ depz
 ```
 
-This recursively scans `/abc/myproject/depz.txt` and prints all the found dependencies. Does not write anything. 
+This recursively scans `/abc/myproject/depz.txt` and prints all the found dependencies. Doesn't make any changes to the file system. 
 
 ---------
 
