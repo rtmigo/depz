@@ -46,6 +46,13 @@ Make sure that it is installed:
 $ depz --help
 ```
 
+Upgrade it later:
+```bash
+$ pip3 install depz --upgrade
+```
+
+
+
 # Use
 
 - Specify dependencies in `depz.txt`

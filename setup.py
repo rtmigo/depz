@@ -29,7 +29,8 @@ setup(
     ]},
 
   keywords="""
-  	source-code dependencies filesystem programming
+      files package library programming local project symlink dependencies directories 
+      library-management package-management source-code reusable-code 
   	""".split(),
 
   # https://pypi.org/classifiers/
