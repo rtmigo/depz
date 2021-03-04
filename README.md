@@ -19,11 +19,11 @@ for distribution or messing with IDE settings.
 My first thought is to **create a symlink**:
 
 ```bash
-$ ln -s /abc/libs/mylib /abc/myproject/mylib
+$ ln -s /abc/libs/mylib /abc/project/mylib
 ```
 
-Now `myproject` sees `mylib` as a local directory `myproject/mylib`. I can edit both `myproject` 
-and `mylib` while working on `myproject`.
+Now `project` sees `mylib` as a local directory `project/mylib`. I can edit both `project` 
+and `mylib` while working on `project`.
 
 But here problems arise:
 - **Portability**. How to make the symlinks easy to recreate on another system?
@@ -32,6 +32,8 @@ But here problems arise:
 The answer is `depz`. It reduces these tasks to a one-line command.
 
 # Install
+
+Get a working [Python](https://www.python.org/) ≥3.7 and [pip](https://pip.pypa.io/en/stable/installing/). Then:
 
 ```bash
 $ pip3 install depz
