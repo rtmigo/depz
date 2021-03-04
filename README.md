@@ -83,4 +83,4 @@ $ cd /abc/myproject
 $ depz
 ```
 
-This scans `/abc/myproject/depz.txt` and unpdates symlinks inside `/abc/myproject`. 
+This recursively scans `/abc/myproject/depz.txt` and updates symlinks inside `/abc/myproject`. 
