@@ -67,7 +67,7 @@ File `xxx/depz.txt` lists dependencies for `xxx`:
 The `depz.txt` format:
 ```sh
 # lines that specify local directory 
-# names are LOCAL dependencies:
+# names are LOCAL dependencies
   
 /absolute/path/to/mylib1
 ../libs/mylib2
