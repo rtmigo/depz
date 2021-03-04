@@ -45,7 +45,10 @@ Exact behavior is specified by the program arguments.
 """
 
 
-def runmain(programArgs: List[str]):
+def runmain(programArgs: List[str] = None):
+	if programArgs is None:
+		programArgs = sys.argv[1:]
+
 	import argparse
 
 	parser = argparse.ArgumentParser()
