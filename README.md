@@ -157,7 +157,7 @@ This can be useful for installing Python external depedencies:
 $ pip3 install $(depz -e line)
 ```
 
-Or installing both local and external dependencies:
+Or install external dependencies and symlink local ones:
 ```txt
 $ pip3 install $(depz -e line --relink)
 ```
