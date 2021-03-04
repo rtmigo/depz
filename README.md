@@ -28,14 +28,14 @@ and `mylib` while working on `myproject`.
 `depz` automates the creation of such symbolic links, solving emerging problems:
 
 - **Portability**. To make the symlinks easy to recreate on another system
-- **Dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
+- **Recursive dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
 
 # Usage
 
 - Specify dependencies in `depz.txt`
 - Run the command `depz`
 
-# Specify dependencies
+## Specify dependencies
 
 File `xxx/depz.txt` lists dependencies for `xxx`:
 - `/abc/myproject/depz.txt` for `myproject`
@@ -76,7 +76,7 @@ links will always reside in the project dir. For example, when running in `/abc/
 |/abc/myproject/depz.txt|../libs/xxx|/abc/libs/xxx|/abc/myproject/xxx|
 |/abc/libs/xxx/depz.txt|../zzz|/abc/libs/zzz|/abc/myproject/zzz|
  
-# Run
+## Run
 
 ```bash
 $ cd /abc/myproject
