@@ -113,10 +113,6 @@ class TestsWithPythonLayout(Tests):
 		os.chdir(str(self.tempDir / "project"))  # changing current dir the project
 		self._run_relink_current_dir()
 
-	# runmain(["--relink"])
-	# result = listDir((self.tempDir / "project"))
-	# self.assertListEqual(result, self.expectedPythonAfterLink)
-
 	@unittest.expectedFailure
 	def test_project_dir_error(self):
 		# running in the wrong directory without specifying --project
@@ -183,8 +179,5 @@ class TestsWithFluterLayout(Tests):
 		result = listDir((self.tempDir / "project"))
 
 		from pprint import pprint
-
-		# print("!!!!")
-		# pprint(result)
 
 		self.assertListEqual(result, self.expectedAfterLink)

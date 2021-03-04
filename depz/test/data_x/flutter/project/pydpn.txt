@@ -1,3 +1,0 @@
-../libraryA_flutter
-../libraryB
-externalLib
