@@ -27,7 +27,7 @@ and `mylib` while working on `myproject`.
 
 But here problems arise:
 - **Portability**. How to make the symlinks easy to recreate on another system?
-- **Recursive dependencies**. How to include not only `mylib`, but all the dependencies of `mylib`?
+- **Recursive local dependencies**. How to include not only `mylib`, but all the dependencies of `mylib`?
 
 The answer is `depz`. It reduces these tasks to a one-line command.
 
