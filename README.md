@@ -91,3 +91,9 @@ $ depz
 ```
 
 This recursively scans `/abc/myproject/depz.txt` and updates symlinks inside `/abc/myproject`. 
+
+```bash
+$ depz --help
+```
+
+Shows command-line options.
