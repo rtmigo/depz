@@ -10,13 +10,13 @@ Command line tool for symlinking directories with reusable source code into the 
 
 Language-agnostic. With Python and Flutter specific extensions.
 
-# Motivation
+# Why
 
 **Reusing code** should be simple. If I have the needed code in a **directory on a local drive**, 
 I just want to **include it** into the project. Without packaging it as a library 
 for distribution or messing with IDE settings.
 
-So I will probably just **create a symlink**:
+My first thought is to **create a symlink**:
 
 ```bash
 $ ln -s /abc/libs/mylib /abc/myproject/mylib
@@ -25,10 +25,11 @@ $ ln -s /abc/libs/mylib /abc/myproject/mylib
 Now `myproject` sees `mylib` as a local directory `myproject/mylib`. I can edit both `myproject` 
 and `mylib` while working on `myproject`.
 
-`depz` automates the creation of such symbolic links, solving emerging problems:
+But here problems arise:
+- **Portability**. How to make the symlinks easy to recreate on another system?
+- **Recursive dependencies**. How to include not only `mylib`, but all the dependencies of `mylib`?
 
-- **Portability**. To make the symlinks easy to recreate on another system
-- **Recursive dependencies**. To include not only `mylib`, but all the dependencies of `mylib`
+The answer is `depz`. It reduces these tasks to a one-line command.
 
 # Install
 
