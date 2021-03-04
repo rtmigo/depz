@@ -8,7 +8,7 @@
 
 Command line tool for symlinking directories with reusable source code into the project.
 
-Language-agnostic. With Python and Flutter specific extensions.
+Language-agnostic.
 
 # Why
 
