@@ -141,7 +141,7 @@ By default, the list of all external dependencies is simply printed to the termi
 ```txt
 $ depz
 
-Scanning /abc/myproject/depz.txt
+Depz file: /abc/myproject/depz.txt
 ...
 External dependencies: pandas numpy requests
 ```
