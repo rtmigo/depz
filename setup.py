@@ -31,15 +31,17 @@ setup(
 
   # https://pypi.org/classifiers/
   classifiers=[
-    #"Development Status :: 4 - Beta",
+    # "Development Status :: 4 - Beta",
     "Development Status :: 2 - Pre-Alpha",
-    #"Development Status :: 3 - Alpha",
+    # "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     'License :: OSI Approved :: BSD License',
-    'Topic :: Software Development :: Documentation',
-    #"Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Typing :: Typed",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Build Tools",
   ],
 
   # test_suite='nose.collector',
