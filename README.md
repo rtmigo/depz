@@ -111,7 +111,7 @@ to `mylib` and started scanning `/abc/mylib/depz.txt`. The paths found there are
 
 But all the symlinks will go directly into `/abc/myproject`.
 
-The following examples show how the direcroies will be linked when running `depz` for `/abc/project`:
+The following examples show how the directories will be linked when running `depz` for `/abc/project`:
 
 #### --mode=default
 
