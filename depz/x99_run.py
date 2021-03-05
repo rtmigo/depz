@@ -70,9 +70,9 @@ def runmain(programArgs: List[str] = None):
 	args = parser.parse_args(programArgs)
 
 	if args.version:
-		lastMod = dt.datetime.fromtimestamp(
-			(Path(__file__).parent / "x00_version.py").stat().st_mtime)
-		print(f"DEPZ {__version__} (c) 2020-{lastMod.year} Art Galkin <ortemeo@gmail.com>")
+		m = max(p.stat().st_mtime for p in Path(__file__).parent.glob("*"))
+		y = dt.datetime.fromtimestamp(m).year
+		print(f"DEPZ {__version__} (c) 2020-{y} Art Galkin <ortemeo@gmail.com>")
 		print("https://github.com/rtmigo/depz")
 		exit(0)
 
