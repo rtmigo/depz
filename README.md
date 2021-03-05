@@ -9,7 +9,7 @@
 
 Command-line tool for symlinking directories with reusable source code into the project.
 
-Language-agnostic.
+Language-agnostic. Works equally well for C++ and for HTML web-sites. 
 
 # Why
 
