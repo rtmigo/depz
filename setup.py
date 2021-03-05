@@ -18,7 +18,7 @@ setup(
   packages=find_packages(),
   install_requires=[],
 
-  description="Command line tool for symlinking directories with reusable code into the project",
+  description="Command-line tool for symlinking directories with reusable code into the project",
 
   long_description=(Path(__file__).parent / 'README.md').read_text(),
   long_description_content_type='text/markdown',

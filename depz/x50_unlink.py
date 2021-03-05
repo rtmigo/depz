@@ -53,8 +53,9 @@ class TestUnlink(TestWithTempDir):
 
 def unlinkChildrenAndMaybeRemove(parent: Path) -> None:
 	"""Removes all the symlinks that a direct children of [parent].
-	The removes the directory if it contained only symlinks.
-	Empty directories are not removed (they did not contain any symlinks).
+	Then removes the directory if it contained only symlinks.
+	If the directory was empty before the call, it will not be removed
+	(it did not contain any symlinks).
 	"""
 
 	if unlinkChildren(parent):  # if something removed
