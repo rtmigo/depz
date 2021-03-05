@@ -27,8 +27,8 @@ Now `project` sees `mylib` as a local directory `project/mylib`. I can edit both
 and `mylib` while working on the `project`.
 
 But here problems arise:
-- **Portability**. How do I make the symlinks easy to recreate on another system?
-- **Recursive local dependencies**. How to include not only `mylib`, but all the dependencies of `mylib`?
+- **Portability**. How do I make the symlinks easy to recreate on another machine?
+- **Recursive local dependencies**. How do I include not only `mylib`, but all the dependencies of `mylib`, and the dependencies of those dependencies?
 
 The answer is `depz`. It reduces these tasks to a one-line command.
 
